@@ -4,8 +4,10 @@ import time
 from typing import List, Dict, Set, Tuple
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.webdriver import WebDriver
+from selenium.webdriver.remote.webelement import WebElement
 from models.data_model import Offer
 from selenium import webdriver
+from selenium.webdriver.support.ui import WebDriverWait
 
 from selenium.webdriver.support import expected_conditions as EC
 
@@ -52,6 +54,8 @@ technologies: Dict[str, List[str]] = {
         "nodejs",
         "express.js",
         "expressjs",
+        "jquery",
+        "javascript(es6/es7)",
     ],
     "Python": [
         "python",
@@ -66,6 +70,7 @@ technologies: Dict[str, List[str]] = {
         "tensorflow",
         "keras",
         "scikit-learn",
+        "pyspark",
     ],
     "React": ["react", "react.js", "reactjs", "react native", "react-native"],
     "Django": ["django"],
@@ -80,7 +85,7 @@ technologies: Dict[str, List[str]] = {
         "yml",
         "yaml",
     ],
-    "RESTAPI": ["restapi", "rest", "api", "restful api"],
+    "RESTAPI": ["restapi", "rest", "api", "restful api", "web api"],
     "Git": ["git", "github", "gitlab", "gitflow", "github actions"],
     "SQL": [
         "sql",
@@ -90,11 +95,13 @@ technologies: Dict[str, List[str]] = {
         "mssql",
         "mariadb",
         "oracle",
+        "oracledb",
         "microsft sql server",
         "sqlalchemy",
         "sql server",
         "bazy danych",
         "database",
+        "pl/sql",
     ],
     "Linux": ["linux", "ubuntu", "debian", "centos", "redhat", "bash", "linux kernel"],
     "GraphQL": ["graphql"],
@@ -119,7 +126,7 @@ technologies: Dict[str, List[str]] = {
     "Vue.js": ["vue.js", "vuejs", "vue"],
     "Angular": ["angular", "angular.js", "angularjs", "angular 2+", "angular 4"],
     "AWS": ["aws", "amazon web services", "amazon aws"],
-    "Azure": ["azure", "microsoft azure"],
+    "Azure": ["azure", "microsoft azure", "ms azure", "azure devops"],
     "C#": [
         "c#",
         "csharp",
@@ -132,6 +139,14 @@ technologies: Dict[str, List[str]] = {
         "asp net",
         "asp",
         ".net core",
+        ".net framework",
+        "vb .net",
+        "microsoft .net core",
+        ".net 6",
+        ".net 7",
+        ".net 8",
+        ".net 9",
+        ".net 10",
     ],
     "Ruby": ["ruby", "ruby on rails", "ror"],
     "PHP": ["php", "laravel", "symfony", "zend", "wordpress"],
@@ -185,10 +200,6 @@ class PrepareOffer:
 
     def get_offer(self) -> Offer:
         self.driver.get(self.link)
-        try:
-            self.driver.find_element(By.ID, value="cookiescript_accept").click()
-        except:
-            pass
         # return self.get_name(), self.get_experience(), self.get_operating_mode()
         min_b2b, max_b2b, min_uop, max_uop = self.get_salary()
         return Offer(
@@ -205,6 +216,10 @@ class PrepareOffer:
         # return self.get_locations()
 
     def get_locations(self) -> List[str]:
+        try:
+            self.driver.find_element(By.ID, value="cookiescript_accept").click()
+        except:
+            pass
         first_loc: str = self.driver.find_element(
             By.CLASS_NAME, value="css-1seeldo"
         ).text
@@ -231,14 +246,18 @@ class PrepareOffer:
         return list(res)
 
     def get_technologies(self) -> List[str]:
-        tech_stack: List[str] = self.driver.find_elements(
-            By.CLASS_NAME, value="css-x1xnx3"
-        )
+        tech_stack: List[str] = [
+            e.text for e in self.driver.find_elements(By.CLASS_NAME, value="css-x1xnx3")
+        ]
         res: Set[str] = set()
         for e in tech_stack:
-            for k in technologies.keys():
-                if e.text.lower() in technologies[k]:
-                    res.add(k)
+            if isinstance(e, str):
+                for k, v in technologies.items():
+                    if any(
+                        re.match(rf"^{re.escape(alias)}$", e, re.IGNORECASE)
+                        for alias in v
+                    ):
+                        res.add(k)
         return list(res)
 
     def get_experience(self) -> str:
@@ -291,8 +310,15 @@ class PrepareOffer:
 
 
 def get_links_to_offers(driver: webdriver.Chrome, link: str) -> List[str]:
-    """Returns all links to offers."""
+    """Returns all links to offers.
+    warining: works on gnu/linux, on macosx may not work
+    """
     driver.get(link)
+    try:
+        driver.find_element(By.ID, value="cookiescript_accept").click()
+    except:
+        pass
+
     set_of_links: Set[str] = set()
     old_count = 0
     new_count = 0
@@ -305,7 +331,7 @@ def get_links_to_offers(driver: webdriver.Chrome, link: str) -> List[str]:
         # Find elements based on the current XPath pattern
         xpath_pattern = f'//*[@id="__next"]/div[2]/div[1]/div/div[2]/div/div/div[3]/div/div[2]/div[{n}]/div/div/a'
         link_elements = driver.find_elements(By.XPATH, xpath_pattern)
-        # //*[@id="__next"]/div[2]/div[1]/div/div[2]/div/div/div[3]/div/div[2]/div[1]/div/div/a
+
         if link_elements:  # If elements are found
             prev_link_elements = link_elements
             links = [link.get_attribute("href") for link in link_elements]
@@ -329,32 +355,25 @@ def get_links_to_offers(driver: webdriver.Chrome, link: str) -> List[str]:
 
 def load_links() -> List[str]:
     links: List[str] = list()
-    with open("all_links.txt") as f:
+    with open("new_links.txt") as f:
         for line in f:
             links.append(line.strip())
     return links
 
 
 if __name__ == "__main__":
-    driver = webdriver.Chrome()
-    try:
-        for v, k in LINKS.items():
-            for elem in get_links_to_offers(driver, k):
-                print(elem)
-    finally:
-        driver.quit()
     # print(
     #     "Name, min_b2b, max_b2b, min_uop, max_uop, technologies, locations, experience, operating_mode"
     # )
-    # print("[")
-    # read_links = load_links()
-    # for index, link in enumerate(read_links):
-    #     try:
-    #         preprocess = PrepareOffer(driver=webdriver.Chrome(), link=link)
-    #         print(preprocess.get_offer().__dict__(), end=",")
-    #     except:
-    #         continue
-    # print("]")
+    print("[")
+    read_links = load_links()
+    for index, link in enumerate(read_links):
+        try:
+            preprocess = PrepareOffer(driver=webdriver.Chrome(), link=link)
+            print(preprocess.get_offer().__dict__(), end=",")
+        except:
+            print(f"Error at {link}")
+    print("]")
     # link = "https://justjoin.it/offers/relativity-software-engineer---product-security-krakow-security"
     # link1 = "https://justjoin.it/offers/smartbear-front-end-engineer-reflect-wroc-aw-javascript"
     # link2 = "https://justjoin.it/offers/bayer-sp-z-o-o-senior-software-engineer-full-stack-javascript"
