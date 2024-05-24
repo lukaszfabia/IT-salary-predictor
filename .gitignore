@@ -7,7 +7,7 @@
 *.fls
 *.synctex.gz
 *.toc
-
+*.out
 __pycache__
 
 tempCodeRunnerFile.*
