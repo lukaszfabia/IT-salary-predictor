@@ -363,19 +363,10 @@ zarobki. Dokładniej mówiąc model otrzyma na wejściu dane takie jak:
 \quad Do oceny modeli wykorzystam metryki takie jak:
 
 \begin{itemize}
-    \item \textbf{Mean Squared Error} - średni błąd kwadratowy
     \item \textbf{Root Mean Squared Error} - pierwiastek z średniego błędu kwadratowego
     \item \textbf{R-squared} - współczynnik determinacji $R^2$
     \item \textbf{Mean Absolute Error} - średni błąd bezwzględny
 \end{itemize}
-
-\subsubsection{Średni błąd kwadratowy}
-
-\quad \textbf{Mean Squared Error (MSE)} - to metryka oceniająca jakość przewidywań modelu poprzez obliczenie średniego kwadratu różnicy między przewidywanymi a rzeczywistymi wartościami. Im niższa wartość MSE, tym lepiej model przewiduje rzeczywiste dane.
-
-\begin{align}
-    {MSE} ={\frac {1}{n}}\sum _{i=1}^{n}\left(Y_{i}-{\hat {Y_{i}}}\right)^{2}.
-\end{align}
 
 \subsubsection{Pierwiastek z średniego błędu kwadratowego}
 
@@ -396,218 +387,30 @@ zarobki. Dokładniej mówiąc model otrzyma na wejściu dane takie jak:
 \end{align}
 
 
-\subsection{Wyniki oraz ograniczenia}
+\subsection{Jak to zrobię?}
 
-\quad Moje podejście opiera się na tworzeniu słownika modeli wraz z ich parametrami. Na samym początku,
-jeszcze przed wyborem konkretnego modelu, dokonuję doboru optymalnych parametrów dla
-każdego z nich. Tutaj można to zrobić na dwa sposoby, ręcznie lub za pomocą \texttt{GridSearchCV} z \texttt{sklearn}.
-W moim przypadku dobrałem ręcznie parametry, ponieważ po tuningu parametrów modelowi brakowało danych (?), i algorytm
-zwracał błąd.
-
-\quad Kolejnym krokiem jest przeprowadzenie procesu uczenia modelu na dostępnych
-danych. Po zakończeniu tego etapu prezentuję wyniki metryk dla najlepszego modelu i zwracam już
-wytrenowany model. Następnie udostępniam możliwość przewidywania zarobków dla większego zbioru danych.
-
-\textbf{Ograniczenia} - tutaj warto zauważyć jedną rzecz, dla niektórych tech-stacków model nie jest w stanie
-przewidzieć zarobków, ponieważ nie ma tak dużo danych w zbiorze. W tym przypadku można bybyło rozszerzyć zbiór
-danych o kolejne ofert - zautomatyzować proces pobierania danych, czyli aktualizować bazę co klika dni.
-
-\textbf{Wyniki} - zwracane modele mogą się różnić w zależności od danych wejściowych, czyli np.
-dla Java, Spring może zostać wybrany model \texttt{Ridge} a dla Pythona wybrany może być \texttt{RandomForest}, no i oczywiście zwrócony
-model jest już wytrenowany na danych, które zostały podane na wejściu, więc przy ponownym przewidzeniu zarobków dajemy
-mu tylko więcej danych. Na koniec tworze wizuazlizację wyników, gdzie mamy porównanie rzeczywistych zarobków z przewidywanymi.
+\quad Moje podejście opiera się na wybraniu modeli regresji liniowej, drzewa decyzyjnego oraz lasu losowego, które będą
+tuningowane za pomocą \texttt{GridSearchCV} w celu znalezienia najlepszych hiperparametrów. Wyniki są dostępne w folderze
+\texttt{../analysis/models\_tuning.csv}. Kolejnym krokiem jest przeprowadzenie uczenia modeli i wybranie najlepszego modelu
+na podstawie metryk. Następnie przewidzę zarobki dla kilku tech-stacków, a na końcu przedstawię wyniki w postaci wizualizacji.
 
 \begin{abstract}
-    \textbf{Proponowane tech-stacki do uczenia}
-    \quad Na tych poszczególnych technologiach będą się uczyć modele, a następnie zostanie wybrany najlepszy
-    \begin{itemize}
-        \item Python
-        \item JavaScript, React
-        \item Docker/Kubernetes, AWS
-    \end{itemize}
+    \quad W następnych rodziałach skupię się na wynikach modeli, a także na wizualizacji wyników, aby nie
+    tworzyć zbyt długiego raportu nie będe analizować słabych modeli tylko skupię się na dwóch najlepszych modelach.
+    \textbf{Uwaga: } Modele, które będą uczone będą umiały przewidywać zarobki na b2b albo na uop, dokładniej są to średnie z widełek.
 
-    \textbf{Pozostałe dane do wyznaczenie zarobków dla powyższych tech-stacków oraz innych zmiennych:}
-    \begin{table}[H]
-        \centering
-        \begin{tabular}{|l|l|l|l|}
-            \hline
-            \textbf{Tech-stacki}   & \textbf{Lokalizacja} & \textbf{Doświadczenie} & \textbf{Typ kontraktu} \\ \hline
-            Python                 & Warszawa             & Junior                 & B2B                    \\ \hline
-            JavaScript, React      & Kraków               & Mid                    & UOP                    \\ \hline
-            Docker/Kubernetes, AWS & Wrocław              & Senior                 & B2B                    \\ \hline
-        \end{tabular}
-    \end{table}
+    \textbf{Reszta danych: } Wszyskie wyniki z uczenia zostaną zapisane w folderze \texttt{../analysis/plots/wyniki/} ew. można też
+    podejrzeć plik z rozwiązaniem problemu w \texttt{../analysis/analysis.ipynb}.
 
+    \quad Stosowane podziałki to 80:20, czyli 80\% danych do uczenia, a 20\% do testowania modelu oraz 60:40.
 \end{abstract}
 
-\subsubsection{Wyniki dla podziału danych 80:20}
-\quad Analizę wyników przeprowadzę dla podziału danych 80:20, gdzie 80\% danych to dane treningowe, a 20\% to dane testowe.
-
-
-\textbf{Co z tego wynika?}
-
-\quad Model będzie miał wystarczająco dużo danych do nauki w przypadku popularnych technologii, zatem
-dane, które będziemy przewidywać będą lepiej dopasowane w teorii.
-
-\begin{table}[H]
-    \centering
-    \begin{tabular}{|l|l|l|l|l|}
-        \hline
-        \textbf{Modele}                         & \textbf{MSE} & \textbf{MAE} & \textbf{RMSE} & \textbf{R2} \\ \hline
-        LinearRegression()                      & 28422749.87  & 4358.93      & 5331.30       & 0.4238      \\ \hline
-        DecisionTreeRegressor()                 & 28263018.93  & 4312.16      & 5316.30       & 0.4271      \\ \hline
-        RandomForestRegressor(n\_estimators=20) & 28284532.84  & 4330.01      & 5318.32       & 0.4266      \\ \hline
-        Ridge(alpha=0.1)                        & 28422322.40  & 2918.68      & 5331.26       & 0.4238      \\ \hline
-        Lasso()                                 & 28422009.47  & 4358.85      & 5331.30       & 0.4238      \\ \hline
-    \end{tabular}
-\end{table}
-
-
-Wybrany model to DecisionTreeRegressor(), ponieważ ma największy współczynnik determinacji $R^2$.
-Przewidywane zarobki dla Juniora znającego ['Python'] w lokalizacji Warszawa na umowie b2b to: \textbf{9400.0 PLN}.
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=\textwidth]{../analysis/plots/wyniki/0.8&0.2/przewidywane_zarobki_dla_juniora_w_warszawa_Python.png}
-\end{figure}
-
-
-\begin{table}[H]
-    \centering
-    \begin{tabular}{|l|l|l|l|l|}
-        \hline
-        \textbf{Modele}                         & \textbf{MSE} & \textbf{MAE} & \textbf{RMSE} & \textbf{R2} \\ \hline
-        LinearRegression()                      & 13221438.39  & 2919.54      & 3636.13       & 0.4823      \\ \hline
-        DecisionTreeRegressor()                 & 21276698.63  & 3431.44      & 4612.67       & 0.1669      \\ \hline
-        RandomForestRegressor(n\_estimators=20) & 18433724.47  & 3192.39      & 4293.45       & 0.2782      \\ \hline
-        Ridge(alpha=0.1)                        & 13213875.66  & 2918.68      & 3635.09       & 0.4826      \\ \hline
-        Lasso()                                 & 13219274.21  & 2919.21      & 3635.83       & 0.4824      \\ \hline
-    \end{tabular}
-\end{table}
-
-
-Wybrany model to \texttt{Ridge} z wartością \texttt{alpha=0.1}, ponieważ ma najniższe wartości błędów oraz najwyższy współczynnik determinacji $R^2$.
-Przewidywane zarobki dla Mida znającego ['JavaScript', 'React'] w lokalizacji Kraków na umowie uop to: \textbf{15028.69 PLN}.
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=\textwidth]{../analysis/plots/wyniki/0.8&0.2/przewidywane_zarobki_dla_mida_w_kraków_JavaScript_React.png}
-    \caption{Przewidywane zarobki dla mida znającego JS i React w Krakowie na uop}
-\end{figure}
-
-
-\begin{table}[H]
-    \centering
-    \begin{tabular}{|l|l|l|l|l|}
-        \hline
-        \textbf{Modele}                         & \textbf{MSE} & \textbf{MAE} & \textbf{RMSE} & \textbf{R2} \\ \hline
-        LinearRegression()                      & 11084299.37  & 2678.04      & 3329.31       & 0.6751      \\ \hline
-        DecisionTreeRegressor()                 & 10681171.68  & 2605.54      & 3268.21       & 0.6870      \\ \hline
-        RandomForestRegressor(n\_estimators=20) & 10691260.30  & 2643.63      & 3269.75       & 0.6867      \\ \hline
-        Ridge(alpha=0.1)                        & 11091505.44  & 2678.65      & 3330.39       & 0.6749      \\ \hline
-        Lasso()                                 & 11085643.78  & 2678.07      & 3329.51       & 0.6751      \\ \hline
-    \end{tabular}
-\end{table}
-
-
-Wybrany model to \texttt{DecisionTreeRegressor}, ponieważ ma najniższe wartości błędów oraz najwyższy współczynnik determinacji $R^2$.
-Przewidywane zarobki dla Seniora znającego ['Docker/Kubernetes', 'AWS'] w lokalizacji Wrocław na umowie b2b to: \textbf{27391.62 PLN}.
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=\textwidth]{../analysis/plots/wyniki/0.8&0.2/przewidywane_zarobki_dla_seniora_w_wrocław_Docker_Kubernetes_AWS.png}
-    \caption{Przewidywane zarobki dla seniora w Wrocławiu znającego Docker, Kubernetes oraz AWS na b2b}
-\end{figure}
+\subsubsection{Wyniki dla podziału danych 80:20 dla umowy o pracę}
 
 
 
-\subsubsection{Wyniki dla podziału danych 60:40}
-
-\begin{table}[H]
-    \centering
-    \begin{tabular}{|l|l|l|l|l|}
-        \hline
-        \textbf{Modele}                         & \textbf{MSE} & \textbf{MAE} & \textbf{RMSE} & \textbf{R2} \\ \hline
-        LinearRegression()                      & 29050483.53  & 4406.48      & 5389.85       & 0.4097      \\ \hline
-        DecisionTreeRegressor()                 & 29520117.74  & 4434.43      & 5433.24       & 0.4001      \\ \hline
-        RandomForestRegressor(n\_estimators=20) & 29210648.93  & 4417.47      & 5404.67       & 0.4064      \\ \hline
-        Ridge(alpha=0.1)                        & 29050015.21  & 4406.39      & 5389.81       & 0.4097      \\ \hline
-        Lasso()                                 & 29049387.82  & 4406.36      & 5389.75       & 0.4238      \\ \hline
-    \end{tabular}
-\end{table}
 
 
-Wybrany model to \texttt{Lasso}, ponieważ ma największy współczynnik determinacji $R^2$.
-Przewidywane zarobki dla Juniora znającego ['Python'] w lokalizacji Warszawa na umowie b2b to: \textbf{9398.07 PLN}.
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=\textwidth]{../analysis/plots/wyniki/0.8&0.2/przewidywane_zarobki_dla_juniora_w_warszawa_Python.png}
-\end{figure}
-
-
-\begin{table}[H]
-    \centering
-    \begin{tabular}{|l|l|l|l|l|}
-        \hline
-        \textbf{Modele}                         & \textbf{MSE} & \textbf{MAE} & \textbf{RMSE} & \textbf{R2} \\ \hline
-        LinearRegression()                      & 17512382.62  & 3014.49      & 4184.78       & 0.4212      \\ \hline
-        DecisionTreeRegressor()                 & 21206971.44  & 3442.39      & 4605.10       & 0.2991      \\ \hline
-        RandomForestRegressor(n\_estimators=20) & 18610952.15  & 3251.63      & 4314.04       & 0.3849      \\ \hline
-        Ridge(alpha=0.1)                        & 17503667.86  & 3014.10      & 4183.74       & 0.4215      \\ \hline
-        Lasso()                                 & 17512097.61  & 3014.5       & 4184.74       & 0.4212      \\ \hline
-    \end{tabular}
-\end{table}
-
-
-Wybrany model to \texttt{Ridge} z wartością \texttt{alpha=0.1}, ponieważ ma najniższe wartości błędów oraz najwyższy współczynnik determinacji $R^2$.
-Przewidywane zarobki dla Mida znającego ['JavaScript', 'React'] w lokalizacji Kraków na umowie uop to: \textbf{14872.58 PLN}.
-
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=\textwidth]{../analysis/plots/wyniki/0.8&0.2/przewidywane_zarobki_dla_mida_w_kraków_JavaScript_React.png}
-    \caption{Przewidywane zarobki dla mida znającego JS w React w Krakowie na uop}
-\end{figure}
-
-
-\begin{table}[H]
-    \centering
-    \begin{tabular}{|l|l|l|l|l|}
-        \hline
-        \textbf{Modele}                         & \textbf{MSE} & \textbf{MAE} & \textbf{RMSE} & \textbf{R2} \\ \hline
-        LinearRegression()                      & 10035694.55  & 2466.69      & 3167.92       & 0.70586     \\ \hline
-        DecisionTreeRegressor()                 & 10593012.16  & 2564.23      & 3254.69       & 0.68953     \\ \hline
-        RandomForestRegressor(n\_estimators=20) & 10042038.81  & 2513.25      & 3168.917      & 0.70568     \\ \hline
-        Ridge(alpha=0.1)                        & 10036240.1   & 2467.61      & 3168.002      & 0.70585     \\ \hline
-        Lasso()                                 & 10036562.26  & 2466.89      & 3168.053      & 0.70584     \\ \hline
-    \end{tabular}
-\end{table}
-
-
-Wybrany model to \texttt{LinearRegression}, ponieważ ma najniższe wartości błędów oraz najwyższy współczynnik determinacji $R^2$.
-Przewidywane zarobki dla Seniora znającego ['Docker/Kubernetes', 'AWS'] w lokalizacji Wrocław na umowie b2b to: \textbf{28221.87 PLN.}
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=\textwidth]{../analysis/plots/wyniki/0.8&0.2/przewidywane_zarobki_dla_seniora_w_wrocław_Docker_Kubernetes_AWS.png}
-    \caption{Przewidywane zarobki dla seniora w Wrocławiu znającego Docker, Kubernetes oraz AWS na b2b}
-\end{figure}
-
-\newpage
-
-\subsection{Wnioski}
-
-\quad Co do podziału 80/20 oraz 60/40 to wyniki są bardzo podobne, ale warto zauważyć, że dla podziału 60/40 zarobki są niższe - bardziej realne.
-Warto zauważyć, najlepsze modele zależą od teck-stacku, ale najczęsciej wyberany był model \texttt{Ridge}.
-Klasyczny model regresji liniowej pojawił się raz gdy mieliśmy określoną jedną technologię i była ona bardzo częsta w ofertach, czyli
-musi dla bardziej rozwiniętej bazy prawdopodobnie ten model byłby całkiem dobry. Warto dodać błędy \texttt{MAE} oraz \texttt{RMSE} są na poziomie kilku tysięcy PLN
-co jest dobrym wynikiem dla ofert skierowanych dla midów, a zwłaszcza dla seniorów, gorzej jest z juniorami, ponieważ błędy są duże jak na przewidzianą pensję,
-wynika to z tego, że obecnie na rynku jest relatywnie mało ofert dla tej grupy. Ostatnią rzeczą może być to, że współczynnik determinacji $R^2$ jest ogólnie całkiem wysoki,
-chociaż on wynika z tego, że ogólnie danych treningowych było sporo, gorzej może być w przypadku gdybyśmy chcieli przewidzieć niszowe technologie np. Ruby z C++.
-Ogónie można powiedzieć, że wyniki są trochę zawyżone co może wynikać z tego, że w ofertach pojawiały się
-bardzo duże zarobki, które mogą być wyjątkiem, a nie regułą.
-
-\quad Koniec końców, nie udało się wyuczyć jednego modelu, ale udało się stworzyć algorytm dobierający odpowiedni model do danych wejściowych.
-Warto dodać, że projekt może być udoskonalony o algorytm, który będzie automatyzować proces pobierania danych, czyli aktualizować bazę co klika dni,
-mogło by to wzbogacić bazę danych o nowe oferty pracy, a co za tym idzie poprawić wyniki modeli.
 \end{document}
 
 
