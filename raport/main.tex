@@ -407,9 +407,200 @@ na podstawie metryk. Następnie przewidzę zarobki dla kilku tech-stacków, a na
 
 \subsubsection{Wyniki dla podziału danych 80:20 dla umowy o pracę}
 
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|c|c|}
+        \hline
+        \textbf{Model}        & \textbf{Mean Absolute Error} & \textbf{Root Mean Squared Error} & \textbf{R\textsuperscript{2} Score} \\ \hline
+        LinearRegression      & 3725.68                      & 4651.76                          & 0.49                                \\ \hline
+        DecisionTreeRegressor & 2462.54                      & 3784.11                          & 0.66                                \\ \hline
+        RandomForestRegressor & 1410.01                      & 2825.33                          & 0.81                                \\ \hline
+        Ridge                 & 3706.76                      & 4637.20                          & 0.49                                \\ \hline
+        Lasso                 & 3715.86                      & 4643.49                          & 0.49                                \\ \hline
+    \end{tabular}
+\end{table}
 
 
+\quad Łatwo widzieć, że najlepszym modelem jest \texttt{RandomForestRegressor}, który ma
+najniższe wartości błędów oraz najwyższy współczynnik determinacji, kolejnym
+będzie \texttt{DecisionTreeRegressor}.
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{../analysis/plots/wyniki/0.8&0.2/uop/RandomForestRegressor/scatter.png}
+    \caption{Dopasowanie danych przewidzianych do prawdziwych}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{../analysis/plots/wyniki/0.8&0.2/uop/RandomForestRegressor/salary_dist.png}
+    \caption{Rozkład dla przewidzianych i prawdziwych wartości}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{../analysis/plots/wyniki/0.8&0.2/uop/DecisionTreeRegressor/scatter.png}
+    \caption{Dopasowanie danych przewidzianych do prawdziwych}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{../analysis/plots/wyniki/0.8&0.2/uop/DecisionTreeRegressor/salary_dist.png}
+    \caption{Rozkład dla przewidzianych i prawdziwych wartości}
+\end{figure}
+
+\subsubsection{Wyniki dla podziału danych 80:20 dla b2b}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|c|c|}
+        \hline
+        \textbf{Model}        & \textbf{Mean Absolute Error} & \textbf{Root Mean Squared Error} & \textbf{R\textsuperscript{2} Score} \\ \hline
+        LinearRegression      & 3636.41                      & 4807.77                          & 0.47                                \\ \hline
+        DecisionTreeRegressor & 2624.86                      & 3897.49                          & 0.65                                \\ \hline
+        RandomForestRegressor & 1729.25                      & 3104.98                          & 0.78                                \\ \hline
+        Ridge                 & 3633.46                      & 4811.16                          & 0.47                                \\ \hline
+        Lasso                 & 3634.19                      & 4822.0                           & 0.47                                \\ \hline
+    \end{tabular}
+\end{table}
+
+\quad W tym przyadku jest tak samo najlepszym okazuje się \texttt{RandomForestRegressor} a następnym
+jest \texttt{DecisionTreeRegressor}.
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{../analysis/plots/wyniki/0.8&0.2/b2b/RandomForestRegressor/scatter.png}
+    \caption{Dopasowanie danych przewidzianych do prawdziwych}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{../analysis/plots/wyniki/0.8&0.2/b2b/RandomForestRegressor/salary_dist.png}
+    \caption{Rozkład dla przewidzianych i prawdziwych wartości}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{../analysis/plots/wyniki/0.8&0.2/b2b/DecisionTreeRegressor/scatter.png}
+    \caption{Dopasowanie danych przewidzianych do prawdziwych}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{../analysis/plots/wyniki/0.8&0.2/b2b/DecisionTreeRegressor/salary_dist.png}
+    \caption{Rozkład dla przewidzianych i prawdziwych wartości}
+\end{figure}
+
+
+\subsubsection{Podsumowanie wyników dla 80:20}
+
+\quad Wyniki pokazały nam, że najlepszym modelem do przewidywania zarobków od innych danych w ofercie jest \texttt{RandomForestRegressor} z parametrami \texttt{n\_estimators=80},
+chociaż błędy były dość wysokie, ale może to wynikać z dużego zakresu pensji oraz mogą być spowodowane małą ilością ofert pracy dla juniorów. Co warto zauważyć,
+w najlepszego modelu dane były w miarę skupione w prostej wyznaczającej idealny wynik. Dopasowanie rozkładu było też całkiem dobre, ponieważ
+wykresy w większej części nachodziły na siebie. Ostatnia uwaga, model do przewidywania zarobków na umowie jest dokładniejszy niż model przewidujący zarobki na b2b.
+
+
+\subsubsection{Wyniki dla podziału danych 60:40 dla uop}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|c|c|}
+        \hline
+        \textbf{Model}        & \textbf{Mean Absolute Error} & \textbf{Root Mean Squared Error} & \textbf{R\textsuperscript{2} Score} \\ \hline
+        LinearRegression      & 3994.07                      & 5361.73                          & 0.44                                \\ \hline
+        DecisionTreeRegressor & 2484.37                      & 3918.8                           & 0.70                                \\ \hline
+        RandomForestRegressor & 1762.22                      & 3582.26                          & 0.75                                \\ \hline
+        Ridge                 & 3982.56                      & 5360.68                          & 0.44                                \\ \hline
+        Lasso                 & 3980.56                      & 5357.41                          & 0.44                                \\ \hline
+    \end{tabular}
+\end{table}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{../analysis/plots/wyniki/0.6&0.4/uop/RandomForestRegressor/scatter.png}
+    \caption{Dopasowanie danych przewidzianych do prawdziwych}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{../analysis/plots/wyniki/0.6&0.4/uop/RandomForestRegressor/salary_dist.png}
+    \caption{Rozkład dla przewidzianych i prawdziwych wartości}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{../analysis/plots/wyniki/0.6&0.4/uop/DecisionTreeRegressor/scatter.png}
+    \caption{Dopasowanie danych przewidzianych do prawdziwych}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{../analysis/plots/wyniki/0.6&0.4/uop/DecisionTreeRegressor/salary_dist.png}
+    \caption{Rozkład dla przewidzianych i prawdziwych wartości}
+\end{figure}
+
+\subsubsection{Wyniki dla podziału danych 60:40 dla uop}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|c|c|}
+        \hline
+        \textbf{Model}        & \textbf{Mean Absolute Error} & \textbf{Root Mean Squared Error} & \textbf{R\textsuperscript{2} Score} \\ \hline
+        LinearRegression      & 3520.18                      & 4613.03                          & 0.49                                \\ \hline
+        DecisionTreeRegressor & 2564.56                      & 3796.84                          & 0.65                                \\ \hline
+        RandomForestRegressor & 1896.69                      & 3275.59                          & 0.74                                \\ \hline
+        Ridge                 & 3516.78                      & 4611.84                          & 0.49                                \\ \hline
+        Lasso                 & 3516.41                      & 4616.76                          & 0.49                                \\ \hline
+    \end{tabular}
+\end{table}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{../analysis/plots/wyniki/0.6&0.4/b2b/RandomForestRegressor/scatter.png}
+    \caption{Dopasowanie danych przewidzianych do prawdziwych}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{../analysis/plots/wyniki/0.6&0.4/b2b/RandomForestRegressor/salary_dist.png}
+    \caption{Rozkład dla przewidzianych i prawdziwych wartości}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{../analysis/plots/wyniki/0.6&0.4/b2b/DecisionTreeRegressor/scatter.png}
+    \caption{Dopasowanie danych przewidzianych do prawdziwych}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{../analysis/plots/wyniki/0.6&0.4/b2b/DecisionTreeRegressor/salary_dist.png}
+    \caption{Rozkład dla przewidzianych i prawdziwych wartości}
+\end{figure}
+
+
+\subsubsection{Podsumowanie wyników dla 60:40}
+
+
+\quad Wyniki dla tej podziałki są na pewno mniej precyzyjne jeśli chodzi o \textbf{RMSE}, ale dla takiego podzielenia daynch znów najlepszymi modelami okazały się modele
+kolejno \texttt{RandomForestRegressor} oraz \texttt{DecisionTreeRegressor}.
+
+\section{Podsumowanie}
+\quad Podsumowując, jeśli chodzi o stworzenie modelu to najlepszym będzie \newline \texttt{RandomForestRegressor(n\_estimators=80)},
+ponieważ dawał najmniejsze błędy chociaż i tak w skali zarobków nie były one małe.
+Do uczenia okazało się, że lepiej wybrać podziałkę 80:20, 80\% dane treningowe a 20\% dane testowe. Wydaje mi się również, że aby uzyskać lepsze wyniki,
+należałoby zaktualizować zbiór danych o nowe oferty (głównie oferty dla juniorów).
+
+\quad Podczas pracy również można było sporządzić wykres, który przedstawiał najważniejsze zmienne w sensie wypływu na wynagrodzenie.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{../analysis/plots/wyniki/importance_of_vars.png}
+    \caption{Zmienne mające wypłw na wynagrodzenie w ofercie pracy}
+\end{figure}
+
+\quad Jak łatwo zauważyć, doświadczenie było najważniejsze.
 
 \end{document}
 
