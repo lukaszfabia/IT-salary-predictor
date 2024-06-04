@@ -591,7 +591,7 @@ kolejno \texttt{RandomForestRegressor} oraz \texttt{DecisionTreeRegressor}.
 ponieważ dawał najmniejsze błędy chociaż i tak w skali zarobków nie były one małe.
 Do uczenia okazało się, że lepiej wybrać podziałkę 80:20, 80\% dane treningowe a 20\% dane testowe. Wydaje mi się również, że aby uzyskać lepsze wyniki,
 należałoby zaktualizować zbiór danych o nowe oferty (głównie oferty dla juniorów).
-Oczywiście model model może być jeszcze lepiej rozwinięty jeśli dodane zostałby nowe cechy np. stopień naukowy lub nowe 
+Oczywiście model model może być jeszcze lepiej rozwinięty jeśli dodane zostałby nowe cechy np. stopień naukowy lub nowe
 technologie lub większe wyspecyfikowanie technologii.
 
 \quad Podczas pracy również można było sporządzić wykres, który przedstawiał najważniejsze zmienne w sensie wypływu na wynagrodzenie.
@@ -603,16 +603,51 @@ technologie lub większe wyspecyfikowanie technologii.
 \end{figure}
 
 \quad Jak łatwo zauważyć, doświadczenie miało największy wpływ na przewidywaną wartość.
-Kolejnymi zmiennymi, które mogły zaskoczyć był np. \textbf{AWS, SQL, Python}. 
+Kolejnymi zmiennymi, które mogły zaskoczyć był np. \textbf{AWS, SQL, Python}.
 
 \section{Testowanie wyuczonego modelu}
 
 \quad Tak jak już wcześniej wspomniałem model, który uznałem za odpowiedni, czyli popełniający najmniejszy błąd
-spośród wszystkich to \texttt{RandoForestRegressor(n_estimators=80)}, dla podziałki 80:20. 
+spośród wszystkich to \texttt{RandoForestRegressor(n\_estimators=80)}, dla podziałki 80:20.
 Przetestuję model, który przewidzi mi pensje na b2b i na umowie o pracę w zależności od
-moich technologii, które znam. Zakładam, że test może dać trochę słabe wyniki, ponieważ
-model będzie musiał przewidzieć zarobki dla takich danych: 
+moich technologii, które znam. Najważniejszą rzeczą jest tutaj to, żeby zarobki na b2b były większe niż na uopie,
+ponieważ pracodawcy nie muszą ponosić kosztów dodatkowych podatków, składek i świadczeń \cite{uop_vs_b2b}.
 
+\begin{itemize}
+    \item \textbf{location}: Wrocław
+    \item \textbf{exp}: Junior
+    \item \textbf{operating\_mode}: Hybrid
+    \item \textbf{tech\_stack}:
+          \begin{itemize}
+              \item Docker/Kubernetes
+              \item Python
+              \item Linux
+              \item React
+              \item TypeScript
+              \item JavaScript
+          \end{itemize}
+\end{itemize}
+
+\subsection{Wyniki testów}
+
+Pensja w lokalizacji \textbf{Wrocław} dla \textbf{Junior} znającego \textit{Docker/Kubernetes, Python, Linux, React, TypeScript, JavaScript}:
+
+\begin{enumerate}
+    \item 12766.79 PLN Brutto na b2b
+    \item 10157.10 PLN Brutto na umowie o pracę
+\end{enumerate}
+
+\quad Jak można widzieć powyżej wyniki są troche zawyżone, z drugiej strony są uzasadnione błędem \textbf{RMSE}, ale dla tego testu wyszło, że na b2b
+zarabia się więcej niż na uopie, co ma sens.
+
+\begin{thebibliography}{9}
+    \bibitem{uop_vs_b2b}
+    \href{https://bizky.ai/blog/umowa-o-prace-a-kontrakt-b2b-co-sie-bardziej-oplaca/}{\textit{Umowa o pracę a kontrakt B2B – jak zarobisz więcej?}}, bizky.ai
+
+    \bibitem{lamport94}
+    Leslie Lamport (1994) \emph{\LaTeX: a document preparation system}, Addison
+    Wesley, Massachusetts, 2nd ed.
+\end{thebibliography}
 
 
 

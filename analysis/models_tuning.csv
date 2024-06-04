@@ -1,6 +1,6 @@
 Model,Params,MSE(-ve)
-Linear_Regression,{},-22698648.632297974
-Decision_Tree,"{'max_depth': 10, 'min_samples_split': 2, 'random_state': 42}",-15809011.859262535
-Random_Forest,{'n_estimators': 80},-11313197.169515355
-Ridge,{'alpha': 5},-22666733.66155015
-Lasso,{'alpha': 2},-22685116.738801457
+Linear_Regression,{},-21745671.26047981
+Decision_Tree,"{'max_depth': 10, 'min_samples_split': 10, 'random_state': 42}",-15674739.519948829
+Random_Forest,{'n_estimators': 80},-10562718.635145534
+Ridge,{'alpha': 5},-21721594.495994054
+Lasso,{'alpha': 2},-21735347.735803925
