@@ -1,4 +1,5 @@
 \documentclass[a4paper]{article}
+\usepackage[a4paper, total={6in, 8in}]{geometry}
 \usepackage{float}
 
 \usepackage{amsmath}
@@ -8,8 +9,9 @@
 \usepackage{hyperref}
 \usepackage{listings}
 \usepackage{polski}
+\usepackage{tcolorbox}
 
-\title{Raport}
+\title{Analiza ofert pracy w IT oraz tworzenie modelu przewidującego zarobki}
 \author{Łukasz Fabia}
 \date{20.05.2024}
 
@@ -22,17 +24,16 @@
 
 \quad Celem badań jest analiza danych dotyczących ofert pracy w IT. W swojej pracy postaram się
 odpowiedzieć na pytanie, jakie są najbardziej poszukiwane umiejętności w branży IT oraz ile można zarobić
-znając dane języki, frameworki czy narzędzia. W tym celu postram się wykorzystać sci-kit learn do stworzenia
-modelu regresji liniowej, który pozwoli mi przewidzieć zarobki na podstawie umiejętności (technologii).
+znając dane języki, frameworki czy narzędzia. W tym celu stworze model, który będzie przewidywał zarobki w zależności od danych wejściowych,
+o których później.
 
 
 \section{Dane}
 
 \quad Dane pozyskam z serwisu \href{https://justjoin.it/}{justjoin.it}, który zbiera oferty pracy z wielu różnych serwisów, zatem
-ofert pracy będzie całkiem sporo. Na stronie mamy katergorie, które mogą być przydatne do analizy, takie jak:
-JS, PHP, Ruby, Python, Java, Net, Mobile, C, DevOps, Security, Data, Go, Game, Scala. W mojej analizie skupię się na nich.
-\quad Dodatkowo analizuję zarobki tylko na b2b oraz na umowie o prace (uop), ponieważ są to najbardziej popularne formy zatrudnienia w IT a inne formy takie jak umowa
-o zlecenie czy umowa o staż pratykcznie nie występują. Do analizy będę również brał pod uwagę lokalizację.
+ofert pracy będzie całkiem sporo. Na stronie mamy katergorie, które mogą być przydatne do filtrowania danych, ale są one mało przydatne, ponieważ one raczej są przypisane do ofert, które nawiązują w jakiś sposób do np. JS. katergorie są następujące:
+JS, PHP, Ruby, Python, Java, Net, Mobile, C, DevOps, Security, Data, Go, Game, Scala. Moje dane będą właśnie z tych podstron.
+\quad Dodatkowo analizuję zarobki tylko na b2b oraz na umowie o prace (uop), ponieważ są to najbardziej popularne formy zatrudnienia w IT a inne formy takie jak umowa o zlecenie czy umowa o staż pratykcznie nie występują. Do analizy będę również brał pod uwagę lokalizację.
 
 \textbf{\newline Technologia} - język programowania, framework, narzędzie, które jest wymagane w ofercie pracy.
 
@@ -72,17 +73,24 @@ klika ofert z tymi samymi danymi, ale dla różnych miast.
 to \texttt{Selenium}, ponieważ strona ma dynamicznie ładowany content.
 
 
-Kroki:
+\textbf{Kroki:}
+
 \begin{itemize}
     \item napisanie skryptu pobierającego linki do ofert pracy z danej kategorii, ponieważ nie chcemy śmiecowych ofert typu Product manager
     \item napisanie skryptu przetwarzającego linki do ofert pracy, aby pobrać dane z oferty
     \item przekierowanie wyniku do pliku json.
     \item normalizacja oraz oczyszczanie danych, kodowanie technologii, do wektora przy pomocy MultiLabelBinarizer z \texttt{sklearn}
-    \item kodowanie duplkacja ofert z różnymi lokalizacjami oraz kodowanie typu pracy i doświadczenia (\texttt{label encoding})
+    \item kodowanie zmiennych kategorycznych (np. miasta, typ pracy, kontrakty)
+    \item wzięcie średniej zarobków potem usunięcie widełek w zarobkach (np. 10-15k $\implies$ 12.5k)
+    \item rozbicie ofert pracy dla kontraktów oraz miasta np. mamy ofertę dla miasta A i B obie mają podane
+          zarobki na b2b i uop, więc powstaną 4 nowe oferty, czyli A\_uop, A\_b2b, B\_uop, B\_b2b.
     \item usunięcie ofert z wynagrodzniem godzinowym bo zalezą one od ilości przepracowanych godzin
+    \item usunięcie tytułów ofert
 \end{itemize}
 
 \textit{Ofert ze stawką godzinową było kilka więc nie wypływają one na wyniki.}
+
+\newpage
 
 \section{Wygląd do danych}
 
@@ -91,98 +99,98 @@ Kroki:
 
 \textbf{Przykładowe dane:}
 
-
-\begin{table}[h]
+\begin{table}[H]
     \centering
-    \begin{tabular}{|c|c|c|c|c|}
+    \begin{tabular}{|l|l|l|l|l|l|l|l|}
         \hline
-        \multicolumn{1}{|c|}{\textbf{title}} & \textbf{min\_b2b} & \textbf{max\_b2b} & \textbf{min\_uop} & \textbf{max\_uop} \\ \hline
-        Senior Software Engineer             & 0.0               & 0.0               & 18000.0           & 28000.0           \\ \hline
-        Senior Backend Node.js Engineer      & 0.0               & 0.0               & 18360.0           & 25125.0           \\ \hline
-        Senior Fullstack Developer           & 22680.0           & 27216.0           & 16600.0           & 19920.0           \\ \hline
+        \textbf{avg\_salary} & \textbf{con\_code} & \textbf{loc\_code} & \textbf{exp\_code} & \textbf{mode\_code} & \textbf{AWS} & \dots & \textbf{android} \\ \hline
+        23000.0              & 1                  & 50                 & 2                  & 0                   & 1            & \dots & 0                \\ \hline
+        21742.5              & 1                  & 37                 & 2                  & 2                   & 0            & \dots & 0                \\ \hline
+        21742.5              & 1                  & 17                 & 2                  & 2                   & 0            & \dots & 0                \\ \hline
+        21742.5              & 1                  & 50                 & 2                  & 2                   & 0            & \dots & 0                \\ \hline
+        21742.5              & 1                  & 54                 & 2                  & 2                   & 0            & \dots & 0                \\ \hline
     \end{tabular}
+    \caption{Klika pierwszych wierszy moich danych.}
 \end{table}
 
 
-\begin{table}[h]
-    \centering
-    \begin{tabular}{|c|c|c|c|}
-        \hline
-        \textbf{location\_code} & \textbf{operating\_mode\_code} & \textbf{experience\_code} \\ \hline
-        38                      & 0                              & 2                         \\ \hline
-        17                      & 2                              & 2                         \\ \hline
-        51                      & 0                              & 2                         \\ \hline
-    \end{tabular}
-\end{table}
 
+\begin{center}
+    \begin{tcolorbox}[colback=white,colframe=blue, title=Uwaga]
+        Skróciłem trochę nazwy, ponieważ musiałbym rozbijać tabele na kilka co byłoby mniej czytelne.
+        \begin{enumerate}
+            \raggedright
+            \item con\_code - kod kontraktu
+            \item loc\_code - kod lokalizacji
+            \item exp\_code - kod doświadczenia
+            \item mode\_code - kod typ pracy
+        \end{enumerate}
+    \end{tcolorbox}
+\end{center}
 
-\begin{table}[h]
-    \centering
-    \begin{tabular}{|c|c|c|c|}
-        \hline
-        \textbf{AWS} & \textbf{JavaScript} & \textbf{React} & \textbf{Java} \\ \hline
-        1            & 1                   & 1              & 0             \\ \hline
-        0            & 1                   & 1              & 0             \\ \hline
-        1            & 1                   & 1              & 0             \\ \hline
-    \end{tabular}
-\end{table}
 
 \newpage
 
 \section{Rozkłady i statystyki}
 
-\quad Aktualnie w zbiorze \textit{jobs.csv} znajduje się \textbf{4574} ofert pracy, które będą poddane
+\quad Aktualnie w zbiorze \textit{jobs.csv} znajduje się \textbf{5751} ofert pracy, które będą poddane
 analizie. Wszystkie dane są znormalizowane i gotowe do analizy. Analizę można zacząć od średniej zarobków
 dla kontraktu B2B oraz UOP.
 
 
 \textbf{Widełki dla Juniora: }
 
-\begin{table}[h]
+\begin{table}[H]
     \centering
     \begin{tabular}{|c|c|c|c|}
         \hline
         \textbf{PLN}             & \textbf{B2B} & \textbf{UOP} \\ \hline
-        \textbf{średnie widełki} & 8555.40      & 13558.71     \\ \hline
-        \textbf{min widełki}     & 4250.00      & 6000.00      \\ \hline
-        \textbf{max widełki}     & 16443.00     & 28000.00     \\ \hline
+        \textbf{średnie widełki} & 9902.18      & 11057.05     \\ \hline
+        \textbf{min widełki}     & 5200.00      & 5500.00      \\ \hline
+        \textbf{max widełki}     & 16100.00     & 19000.00     \\ \hline
     \end{tabular}
     \caption{Średnie zarobki w PLN dla \texttt{juniora} w Polsce}
 \end{table}
 
 \textbf{Widełki dla Mida: }
 
-\begin{table}[h]
+\begin{table}[H]
     \centering
     \begin{tabular}{|c|c|c|c|}
         \hline
         \textbf{PLN}             & \textbf{B2B} & \textbf{UOP} \\ \hline
-        \textbf{średnie widełki} & 12378.99     & 18041.77     \\ \hline
-        \textbf{min widełki}     & 5000.00      & 7000.00      \\ \hline
-        \textbf{max widełki}     & 25000.00     & 30000.00     \\ \hline
+        \textbf{średnie widełki} & 18025.50     & 15210.38     \\ \hline
+        \textbf{min widełki}     & 3132.50      & 6000.00      \\ \hline
+        \textbf{max widełki}     & 32500.00     & 27500.00     \\ \hline
     \end{tabular}
     \caption{Średnie zarobki w PLN dla \texttt{mida} w Polsce}
 \end{table}
 
 \textbf{Widełki dla Seniora: }
 
-\begin{table}[h]
+\begin{table}[H]
     \centering
     \begin{tabular}{|c|c|c|c|}
         \hline
         \textbf{PLN}             & \textbf{B2B} & \textbf{UOP} \\ \hline
-        \textbf{średnie widełki} & 18930.61     & 25848.46     \\ \hline
-        \textbf{min widełki}     & 8000.00      & 11000.00     \\ \hline
-        \textbf{max widełki}     & 40000.00     & 80000.00     \\ \hline
+        \textbf{średnie widełki} & 25700.81     & 22318.03     \\ \hline
+        \textbf{min widełki}     & 9791.00      & 10000.00     \\ \hline
+        \textbf{max widełki}     & 52500.00     & 60000.00     \\ \hline
     \end{tabular}
     \caption{Średnie zarobki w PLN dla \texttt{seniora} w Polsce}
 \end{table}
+
+\quad Generalnie zarobki wyszły całkiem sensownie,
+ponieważ dla Mida i Seniora mamy większą pensję na B2B niż na UOP, dla juniora jest na odwrót, ale nie mam pojęcia dlaczego tak się
+dzieje, może na umowę o pracę dostają się bardzo dobrzy programiści albo jest poprostu mało ofert pracy dla juniora na b2b.
+
+
 \newpage
 \subsection{Jak się pracuje w IT?}
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.8\textwidth]{../analysis/plots/rozkłady/typy_pracy.png}
+    \includegraphics[width=\textwidth]{../analysis/plots/rozkłady/typy_pracy.png}
     \caption{Rozkład typów pracy}
 \end{figure}
 
@@ -193,18 +201,20 @@ dla kontraktu B2B oraz UOP.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.8\textwidth]{../analysis/plots/rozkłady/rozkład_doświadczenia.png}
+    \includegraphics[width=\textwidth]{../analysis/plots/rozkłady/rozkład_doświadczenia.png}
     \caption{Rozkład typów pracy}
 \end{figure}
 
 \quad Tak jak można było się spodziewać - najwięcej ofert pracy jest dla seniorów,
-stąd też wynika dlaczego tak dużo kontraktów dotyczy pracy zdalnej. Chociaż
+stąd też wynika dlaczego tak dużo kontraktów dotyczy pracy zdalnej, ponieważ pracodawca ma większe "zaufanie" do seniora niż do juniora. Chociaż
 warto powiedzieć sytuacja midów jest również dobra. Gorzej jest z ofertami dla młodych programistów.
-Tutaj liczba ofert wyniosła zaledwie 139, co jest bardzo małą liczbą w porównaniu do innych grup.
+Tutaj liczba ofert wyniosła zaledwie 159, co jest bardzo małą liczbą w porównaniu do innych grup.
 
-\textit{Czy to oznacza, że młodzi programiści mają trudniej, a słynne "eldorado" w IT jest tylko dla doświadczonych programistów?}
+\begin{center}
+    \textit{Czy to oznacza, że młodzi programiści mają trudniej, a słynne "eldorado" w IT jest tylko dla doświadczonych programistów?}
+\end{center}
 
-\quad Tutaj można powiedzieć, że juniorzy mają trudniej \textbf{wejść} do branży, ale zarobki po wejściu są naprawdę atrakcyjne,
+\quad Tutaj można powiedzieć, że juniorzy mają trudniej żeby \textbf{wejść} do branży, ale zarobki po wejściu są naprawdę atrakcyjne,
 no, ale tutaj problem może być z wejściem.
 
 
@@ -239,7 +249,7 @@ no, ale tutaj problem może być z wejściem.
 
 \quad Tutaj moim zdaniem troche zaskoczenie ponieważ bez \texttt{SQL} ciężko znaleźć prace w IT, czyli
 bazy danych to jest podstawa przy rekrutowanu się do pracy. Oczywiście nie mogło zabraknąć \texttt{Pythona} oraz \texttt{JavaScriptu} jeśli chodzi o języki skryptowe.
-Co warto zazanczyć narzędzia takie jak \texttt{Docker} czy \texttt{Kubernetes} również są bardzo popularne i warto je znać. \texttt{Java} wygrywa z \texttt{C\#} a \texttt{GNU/Linux} deklasuje \texttt{Windowsa}.
+Co warto zazanczyć narzędzia takie jak \texttt{Docker} czy \texttt{Kubernetes} również są bardzo popularne i warto je znać. \texttt{Java} wygrywa z \texttt{C\#} a \texttt{GNU/Linux} dobrze jest znać.
 
 
 \subsection{Gdzie jest największy popyt na programistów?}
@@ -263,9 +273,7 @@ Co warto zazanczyć narzędzia takie jak \texttt{Docker} czy \texttt{Kubernetes}
 \end{figure}
 
 \quad \textbf{Warszawa} jest najbardziej przyjazna dla juniorów, ale
-warto zauważyć, że wykres nie różni się bardzo od poprzedniego z jednym, \textit{ale} - \textbf{Katowice} są
-na 3 miejscu w zestawieniu dla juniorów, co może być zaskoczeniem.
-
+warto zauważyć, że wykres nie różni się bardzo od poprzedniego z jednym, \textit{ale} - \textbf{Gdańsk} jest na 3 miejscu w zestawieniu dla juniorów, co może być zaskoczeniem.
 
 \section{Powiązania między danymi}
 
@@ -285,10 +293,11 @@ na 3 miejscu w zestawieniu dla juniorów, co może być zaskoczeniem.
     \item React i JS i TS często pojawiają sie razem w ofertach pracy obok HTML i CSS
     \item Jak sie uczy Django to warto znać inne frameworki backendowe takie jak Flask czy FastAPI
     \item Jak sie idzie w Embedded to warto znać C/C++ oraz Linux
+    \item Technologie microsoftu takie jak C\#, Azure występują razem
 \end{enumerate}
 
 \quad To tylko kilka przykładów wymienionych wynikający z obrazka powyżej, ale warto zauważyć, że nie ma tutaj dużo
-powiązań między technologiami, co może wynikać z tego, że technologie są zbyt różne, aby były powiązane.
+powiązań między technologiami, co może wynikać z tego, że są zbyt różne, aby były powiązane.
 
 
 \subsection{Powiązania między innymi zmiennymi}
@@ -302,8 +311,8 @@ powiązań między technologiami, co może wynikać z tego, że technologie są 
 \quad \textbf{Co można zauważyć?}
 
 \begin{enumerate}
-    \item W jakiś spobób powiązane są ze sobą zarobki na B2B i UOP - ma sens
-    \item Wynagrodzenie na B2B i UOP jest powiązane z doświadczeniem
+    \item Średnia pensja jest mocno powiązana z doświadczeniem
+    \item Typ kontraktu też wiąże się z doświadczeniem
 \end{enumerate}
 
 
@@ -311,13 +320,19 @@ powiązań między technologiami, co może wynikać z tego, że technologie są 
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth]{../analysis/plots/korelacje/zarobki_a_technologie.png}
-    \caption{Powiązania między zarobkiem a technologiami}
+    \includegraphics[width=\textwidth]{../analysis/plots/korelacje/zarobki_na_b2b_a_technologie.png}
+    \caption{Powiązania między zarobkiem b2b a technologiami}
 \end{figure}
 
-\quad Tutaj jest kilka ciekawych powiązań, które warto zauważyć, np. na umowie o prace znaczenie ma
-znajomość: Go, AWS, Angulara, Java, SQL czy Andorida, chociaż nie są to mocne powiązania. Natomiast na B2B nie ma jakiś znaczących powiązań można wskazać
-np. Resta, AWS, Docker/Kubernetes czy PHP, ale są to watości rzędu 0.09, co nie jest imponującym wynikiem.
+\quad AWS, Git, Python, PHP mają wypłw na pensję na b2b.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{../analysis/plots/korelacje/zarobki_na_uop_a_technologie.png}
+    \caption{Powiązania między zarobkiem uop a technologiami}
+\end{figure}
+
+\quad PHP, Python, AWS, SQL, Go, Terraform mają wpływ na pensję na uop.
 
 
 \section{Czy da się przewidzieć zarobki, w zależności od mojego tech-stacku?}
@@ -331,6 +346,10 @@ zarobki. Dokładniej mówiąc model otrzyma na wejściu dane takie jak:
 
 \begin{itemize}
     \item Tech-stack
+    \item Lokalizacja
+    \item Typ pracy
+    \item Doświadczenie
+    \item Typ kontraktu (B2B, UoP)
 \end{itemize}
 
 \texttt{Output:}
@@ -350,7 +369,6 @@ zarobki. Dokładniej mówiąc model otrzyma na wejściu dane takie jak:
               \item \texttt{LinearRegression}
               \item \texttt{Ridge}
               \item \texttt{Lasso}
-              \item \texttt{ElasticNet}
           \end{itemize}
     \item \texttt{Decision tree}
     \item \texttt{Random forest}
@@ -360,7 +378,7 @@ zarobki. Dokładniej mówiąc model otrzyma na wejściu dane takie jak:
 
 \subsection{Trochę statystyki - metryki}
 
-\quad Do oceny modeli wykorzystam metryki takie jak:
+\quad Do oceny modeli wykorzystam metryki takie jak, ale wybierać będę po RMSE, reszta metryk jest w ramach ciekawostki:
 
 \begin{itemize}
     \item \textbf{Root Mean Squared Error} - pierwiastek z średniego błędu kwadratowego
@@ -370,21 +388,27 @@ zarobki. Dokładniej mówiąc model otrzyma na wejściu dane takie jak:
 
 \subsubsection{Pierwiastek z średniego błędu kwadratowego}
 
-\quad \textbf{Root Mean Squared Error (RMSE)} - to pierwiastek z MSE, co daje nam miarę błędu przewidywań w tych samych jednostkach co dane wejściowe. Jest bardziej intuicyjny w interpretacji niż MSE.
+\quad \textbf{Root Mean Squared Error (RMSE)} - to pierwiastek z MSE, daje nam miarę błędu przewidywań w tych samych jednostkach co dane wejściowe.
+Można go interpretować jako średnią oczekiwaną różnicę +/- między wartością przewidywaną a rzeczywistą \cite{rmse}.
+
+\begin{equation}
+    RMSE = \sqrt{\frac{1}{n} \sum_{i=1}^{n} (y_i - \hat{y_i})^2}
+\end{equation}
 
 \subsubsection{Współczynnik determinacji}
 
 \quad \textbf{R-squared (R2)} - to miara oceny dopasowania funkcji regresji do danych. Wartość bliska 1 oznacza, że funkcja regresji lepiej dopasowała sie do danych.
 
-\begin{align} R^2&=1-\frac{\sum({y_i}-\hat{y_i})^2}{\sum(y_i-\bar{y})^2}, R^2 \in [0, 1] \end{align}
+\begin{equation} R^2=1-\frac{\sum({y_i}-\hat{y_i})^2}{\sum(y_i-\bar{y})^2}, R^2 \in [0, 1] \end{equation}
 
 \subsubsection{Średni błąd bezwzględny}
 
-\quad \textbf{Mean Absolute Error (MAE)} - to średni bezwzględny błąd między przewidywaniami a rzeczywistymi wartościami. MAE mierzy średnią wielkość błędów w przewidywaniach modelu, nie zwracając uwagi na kierunek błędu. Im niższa wartość MAE, tym lepiej model przewiduje rzeczywiste dane.
+\quad \textbf{Mean Absolute Error (MAE)} - to średni bezwzględny błąd między przewidywaniami a rzeczywistymi wartościami.
+Jest bardziej odporny na wartości odstające niż RMSE (outlinery), ponieważ nie podnosi błędów do kwadratu.
 
-\begin{align}
+\begin{equation}
     {\displaystyle \mathrm {MAE} ={\frac {\sum _{i=1}^{n}\left|y_{i}-x_{i}\right|}{n}}.}
-\end{align}
+\end{equation}
 
 
 \subsection{Jak to zrobię?}
@@ -397,7 +421,6 @@ na podstawie metryk. Następnie przewidzę zarobki dla kilku tech-stacków, a na
 \begin{abstract}
     \quad W następnych rodziałach skupię się na wynikach modeli, a także na wizualizacji wyników, aby nie
     tworzyć zbyt długiego raportu nie będe analizować słabych modeli tylko skupię się na dwóch najlepszych modelach.
-    \textbf{Uwaga: } Modele, które będą uczone będą umiały przewidywać zarobki na b2b albo na uop, dokładniej są to średnie z widełek.
 
     \textbf{Reszta danych: } Wszyskie wyniki z uczenia zostaną zapisane w folderze \texttt{../analysis/plots/wyniki/} ew. można też
     podejrzeć plik z rozwiązaniem problemu w \texttt{../analysis/analysis.ipynb}.
@@ -405,194 +428,135 @@ na podstawie metryk. Następnie przewidzę zarobki dla kilku tech-stacków, a na
     \quad Stosowane podziałki to 80:20, czyli 80\% danych do uczenia, a 20\% do testowania modelu oraz 60:40.
 \end{abstract}
 
-\subsubsection{Wyniki dla podziału danych 80:20 dla umowy o pracę}
+\subsubsection{Wyniki dla podziału danych 80:20}
 
 \begin{table}[H]
     \centering
     \begin{tabular}{|c|c|c|c|}
         \hline
         \textbf{Model}        & \textbf{Mean Absolute Error} & \textbf{Root Mean Squared Error} & \textbf{R\textsuperscript{2} Score} \\ \hline
-        LinearRegression      & 3725.68                      & 4651.76                          & 0.49                                \\ \hline
-        DecisionTreeRegressor & 2462.54                      & 3784.11                          & 0.66                                \\ \hline
-        RandomForestRegressor & 1410.01                      & 2825.33                          & 0.81                                \\ \hline
-        Ridge                 & 3706.76                      & 4637.20                          & 0.49                                \\ \hline
-        Lasso                 & 3715.86                      & 4643.49                          & 0.49                                \\ \hline
+        LinearRegression      & 3639.59                      & 4995.80                          & 0.50                                \\ \hline
+        DecisionTreeRegressor & 2691.79                      & 4140.79                          & 0.66                                \\ \hline
+        RandomForestRegressor & 1597.75                      & 3188.99                          & 0.80                                \\ \hline
+        Ridge                 & 3637.09                      & 4995.57                          & 0.50                                \\ \hline
+        Lasso                 & 3634.55                      & 4995.54                          & 0.50                                \\ \hline
     \end{tabular}
 \end{table}
 
 
 \quad Łatwo widzieć, że najlepszym modelem jest \texttt{RandomForestRegressor}, który ma
 najniższe wartości błędów oraz najwyższy współczynnik determinacji, kolejnym
-będzie \texttt{DecisionTreeRegressor}.
+będzie \texttt{DecisionTreeRegressor}, choć nie jest on idealny powiedziałbym, słaby.
+Co do reszty modele regresji liniowej mają pratykcznie te same wyniki.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth]{../analysis/plots/wyniki/0.8&0.2/uop/RandomForestRegressor/scatter.png}
+    \includegraphics[width=\textwidth]{../analysis/plots/wyniki/0.8&0.2/RandomForestRegressor/scatter.png}
     \caption{Dopasowanie danych przewidzianych do prawdziwych}
 \end{figure}
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth]{../analysis/plots/wyniki/0.8&0.2/uop/RandomForestRegressor/salary_dist.png}
+    \includegraphics[width=\textwidth]{../analysis/plots/wyniki/0.8&0.2/RandomForestRegressor/salary_dist.png}
     \caption{Rozkład dla przewidzianych i prawdziwych wartości}
 \end{figure}
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth]{../analysis/plots/wyniki/0.8&0.2/uop/DecisionTreeRegressor/scatter.png}
+    \includegraphics[width=\textwidth]{../analysis/plots/wyniki/0.8&0.2/RandomForestRegressor/errors.png}
+    \caption{Rozkład dla przewidzianych i prawdziwych wartości}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{../analysis/plots/wyniki/0.8&0.2/DecisionTreeRegressor/scatter.png}
     \caption{Dopasowanie danych przewidzianych do prawdziwych}
 \end{figure}
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth]{../analysis/plots/wyniki/0.8&0.2/uop/DecisionTreeRegressor/salary_dist.png}
-    \caption{Rozkład dla przewidzianych i prawdziwych wartości}
-\end{figure}
-
-\subsubsection{Wyniki dla podziału danych 80:20 dla b2b}
-
-\begin{table}[H]
-    \centering
-    \begin{tabular}{|c|c|c|c|}
-        \hline
-        \textbf{Model}        & \textbf{Mean Absolute Error} & \textbf{Root Mean Squared Error} & \textbf{R\textsuperscript{2} Score} \\ \hline
-        LinearRegression      & 3636.41                      & 4807.77                          & 0.47                                \\ \hline
-        DecisionTreeRegressor & 2624.86                      & 3897.49                          & 0.65                                \\ \hline
-        RandomForestRegressor & 1729.25                      & 3104.98                          & 0.78                                \\ \hline
-        Ridge                 & 3633.46                      & 4811.16                          & 0.47                                \\ \hline
-        Lasso                 & 3634.19                      & 4822.0                           & 0.47                                \\ \hline
-    \end{tabular}
-\end{table}
-
-\quad W tym przyadku jest tak samo najlepszym okazuje się \texttt{RandomForestRegressor} a następnym
-jest \texttt{DecisionTreeRegressor}.
-
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=\textwidth]{../analysis/plots/wyniki/0.8&0.2/b2b/RandomForestRegressor/scatter.png}
-    \caption{Dopasowanie danych przewidzianych do prawdziwych}
-\end{figure}
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=\textwidth]{../analysis/plots/wyniki/0.8&0.2/b2b/RandomForestRegressor/salary_dist.png}
+    \includegraphics[width=\textwidth]{../analysis/plots/wyniki/0.8&0.2/DecisionTreeRegressor/salary_dist.png}
     \caption{Rozkład dla przewidzianych i prawdziwych wartości}
 \end{figure}
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth]{../analysis/plots/wyniki/0.8&0.2/b2b/DecisionTreeRegressor/scatter.png}
-    \caption{Dopasowanie danych przewidzianych do prawdziwych}
-\end{figure}
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=\textwidth]{../analysis/plots/wyniki/0.8&0.2/b2b/DecisionTreeRegressor/salary_dist.png}
+    \includegraphics[width=\textwidth]{../analysis/plots/wyniki/0.8&0.2/DecisionTreeRegressor/errors.png}
     \caption{Rozkład dla przewidzianych i prawdziwych wartości}
 \end{figure}
-
 
 \subsubsection{Podsumowanie wyników dla 80:20}
 
 \quad Wyniki pokazały nam, że najlepszym modelem do przewidywania zarobków od innych danych w ofercie jest \texttt{RandomForestRegressor} z parametrami \texttt{n\_estimators=80},
 chociaż błędy były dość wysokie, ale może to wynikać z dużego zakresu pensji oraz mogą być spowodowane małą ilością ofert pracy dla juniorów. Co warto zauważyć,
 w najlepszego modelu dane były w miarę skupione w prostej wyznaczającej idealny wynik. Dopasowanie rozkładu było też całkiem dobre, ponieważ
-wykresy w większej części nachodziły na siebie. Ostatnia uwaga, model do przewidywania zarobków na umowie jest dokładniejszy niż model przewidujący zarobki na b2b.
+wykresy w większej części nachodziły na siebie.
 
 
-\subsubsection{Wyniki dla podziału danych 60:40 dla uop}
-
-\begin{table}[H]
-    \centering
-    \begin{tabular}{|c|c|c|c|}
-        \hline
-        \textbf{Model}        & \textbf{Mean Absolute Error} & \textbf{Root Mean Squared Error} & \textbf{R\textsuperscript{2} Score} \\ \hline
-        LinearRegression      & 3994.07                      & 5361.73                          & 0.44                                \\ \hline
-        DecisionTreeRegressor & 2484.37                      & 3918.8                           & 0.70                                \\ \hline
-        RandomForestRegressor & 1762.22                      & 3582.26                          & 0.75                                \\ \hline
-        Ridge                 & 3982.56                      & 5360.68                          & 0.44                                \\ \hline
-        Lasso                 & 3980.56                      & 5357.41                          & 0.44                                \\ \hline
-    \end{tabular}
-\end{table}
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=\textwidth]{../analysis/plots/wyniki/0.6&0.4/uop/RandomForestRegressor/scatter.png}
-    \caption{Dopasowanie danych przewidzianych do prawdziwych}
-\end{figure}
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=\textwidth]{../analysis/plots/wyniki/0.6&0.4/uop/RandomForestRegressor/salary_dist.png}
-    \caption{Rozkład dla przewidzianych i prawdziwych wartości}
-\end{figure}
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=\textwidth]{../analysis/plots/wyniki/0.6&0.4/uop/DecisionTreeRegressor/scatter.png}
-    \caption{Dopasowanie danych przewidzianych do prawdziwych}
-\end{figure}
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=\textwidth]{../analysis/plots/wyniki/0.6&0.4/uop/DecisionTreeRegressor/salary_dist.png}
-    \caption{Rozkład dla przewidzianych i prawdziwych wartości}
-\end{figure}
-
-\subsubsection{Wyniki dla podziału danych 60:40 dla uop}
+\subsubsection{Wyniki dla podziału danych 60:40}
 
 \begin{table}[H]
     \centering
     \begin{tabular}{|c|c|c|c|}
         \hline
         \textbf{Model}        & \textbf{Mean Absolute Error} & \textbf{Root Mean Squared Error} & \textbf{R\textsuperscript{2} Score} \\ \hline
-        LinearRegression      & 3520.18                      & 4613.03                          & 0.49                                \\ \hline
-        DecisionTreeRegressor & 2564.56                      & 3796.84                          & 0.65                                \\ \hline
-        RandomForestRegressor & 1896.69                      & 3275.59                          & 0.74                                \\ \hline
-        Ridge                 & 3516.78                      & 4611.84                          & 0.49                                \\ \hline
-        Lasso                 & 3516.41                      & 4616.76                          & 0.49                                \\ \hline
+        LinearRegression      & 3685.29                      & 4954.55                          & 0.50                                \\ \hline
+        DecisionTreeRegressor & 2777.77                      & 4115.00                          & 0.66                                \\ \hline
+        RandomForestRegressor & 1799.06                      & 3265.79                          & 0.79                                \\ \hline
+        Ridge                 & 3683.98                      & 4955.21                          & 0.50                                \\ \hline
+        Lasso                 & 3684.60                      & 4957.81                          & 0.50                                \\ \hline
     \end{tabular}
 \end{table}
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth]{../analysis/plots/wyniki/0.6&0.4/b2b/RandomForestRegressor/scatter.png}
+    \includegraphics[width=\textwidth]{../analysis/plots/wyniki/0.6&0.4/RandomForestRegressor/scatter.png}
     \caption{Dopasowanie danych przewidzianych do prawdziwych}
 \end{figure}
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth]{../analysis/plots/wyniki/0.6&0.4/b2b/RandomForestRegressor/salary_dist.png}
+    \includegraphics[width=\textwidth]{../analysis/plots/wyniki/0.6&0.4/RandomForestRegressor/salary_dist.png}
     \caption{Rozkład dla przewidzianych i prawdziwych wartości}
 \end{figure}
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth]{../analysis/plots/wyniki/0.6&0.4/b2b/DecisionTreeRegressor/scatter.png}
+    \includegraphics[width=\textwidth]{../analysis/plots/wyniki/0.6&0.4/RandomForestRegressor/errors.png}
+    \caption{Rozkład dla przewidzianych i prawdziwych wartości}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{../analysis/plots/wyniki/0.6&0.4/DecisionTreeRegressor/scatter.png}
     \caption{Dopasowanie danych przewidzianych do prawdziwych}
 \end{figure}
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth]{../analysis/plots/wyniki/0.6&0.4/b2b/DecisionTreeRegressor/salary_dist.png}
+    \includegraphics[width=\textwidth]{../analysis/plots/wyniki/0.6&0.4/DecisionTreeRegressor/salary_dist.png}
     \caption{Rozkład dla przewidzianych i prawdziwych wartości}
 \end{figure}
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{../analysis/plots/wyniki/0.6&0.4/DecisionTreeRegressor/errors.png}
+    \caption{Rozkład dla przewidzianych i prawdziwych wartości}
+\end{figure}
 
 \subsubsection{Podsumowanie wyników dla 60:40}
 
 
-\quad Wyniki dla tej podziałki są na pewno mniej precyzyjne jeśli chodzi o \textbf{RMSE}, ale dla takiego podzielenia daynch znów najlepszymi modelami okazały się modele
-kolejno \texttt{RandomForestRegressor} oraz \texttt{DecisionTreeRegressor}.
+\quad Wyniki są mniej precyzyjne niż dla poprzedniego testu, ale to wynika z faktu, że model uczył się na mniejszej
+ilości ofert. Warto zauważyć, że najlepszy model to \texttt{RandomForestRegressor} z parametrami \texttt{n\_estimators=80},
+potem był \texttt{DecisionTreeRegressor}, który miał gorsze wyniki niż w poprzednim teście. Warto zauważyć, że modele regresji liniowej osiągnęły lepsze wyniki jeśli chodzi o błędy, ale współczynnik determinacji był gorszy niż dla poprzedniego podziału.
 
 \section{Podsumowanie}
 \quad Podsumowując, jeśli chodzi o stworzenie modelu to najlepszym będzie \newline \texttt{RandomForestRegressor(n\_estimators=80)},
 ponieważ dawał najmniejsze błędy chociaż i tak w skali zarobków nie były one małe.
 Do uczenia okazało się, że lepiej wybrać podziałkę 80:20, 80\% dane treningowe a 20\% dane testowe. Wydaje mi się również, że aby uzyskać lepsze wyniki,
 należałoby zaktualizować zbiór danych o nowe oferty (głównie oferty dla juniorów).
-Oczywiście model model może być jeszcze lepiej rozwinięty jeśli dodane zostałby nowe cechy np. stopień naukowy lub nowe
-technologie lub większe wyspecyfikowanie technologii.
+Oczywiście model model może być jeszcze lepiej rozwinięty jeśli dodane zostałby nowe cechy np. stopień naukowy lub nowe technologie lub większe wyspecyfikowanie technologii.
 
 \quad Podczas pracy również można było sporządzić wykres, który przedstawiał najważniejsze zmienne w sensie wypływu na wynagrodzenie.
 
@@ -603,7 +567,7 @@ technologie lub większe wyspecyfikowanie technologii.
 \end{figure}
 
 \quad Jak łatwo zauważyć, doświadczenie miało największy wpływ na przewidywaną wartość.
-Kolejnymi zmiennymi, które mogły zaskoczyć był np. \textbf{AWS, SQL, Python}.
+Kolejnymi zmiennymi, które miały wpływ to \textbf{typ umowy}, \textbf{AWS}, \textbf{miasto}, \textbf{typ pracy}.
 
 \section{Testowanie wyuczonego modelu}
 
@@ -633,22 +597,32 @@ ponieważ pracodawcy nie muszą ponosić kosztów dodatkowych podatków, składe
 Pensja w lokalizacji \textbf{Wrocław} dla \textbf{Junior} znającego \textit{Docker/Kubernetes, Python, Linux, React, TypeScript, JavaScript}:
 
 \begin{enumerate}
-    \item 12766.79 PLN Brutto na b2b
-    \item 10157.10 PLN Brutto na umowie o pracę
+    \item 9110.12 PLN Brutto na umowie o pracę
+    \item 9805.69 PLN Brutto na b2b
 \end{enumerate}
 
 \quad Jak można widzieć powyżej wyniki są troche zawyżone, z drugiej strony są uzasadnione błędem \textbf{RMSE}, ale dla tego testu wyszło, że na b2b
-zarabia się więcej niż na uopie, co ma sens.
+zarabia się więcej niż na uopie, co ma sens. Ostatnią obserwacją może być, ilość technologii na wejściu, nie ma istotnego wpływu,
+chodzi mi o to, że bardziej liczy się konfiguracja technologii niż ich ilość, ponieważ model mógł nie dostać odpowiednich danych treninowych oraz warto dodać, że jeślie model dostał na treningu oferty
+z wysokimi zarobkami to wyniki będą zawyżone. Innym wyjaśnieniem może być to, że w ofertach dana technologia miała mniejszy bądź większy wpływ na wynagrodzenie/a.
+
+\quad Koniec końców udało się stworzyć jeden model przewidujący zarobki w zależności od innych zmiennych w ofercie pracy, który miał najmniejsze błędy spośród innych modeli, co jest zadowalające a
+przewidywane wartości są 'powiedzmy', że sensowne.\newline
+
+\begin{center}
+    \href{https://github.com/lukaszfabia/RaportIT}{\textit{Link to całego projektu znajduje się na moim \textbf{GitHubie}}}
+\end{center}
+
+
+\section{Bibliografia}
 
 \begin{thebibliography}{9}
     \bibitem{uop_vs_b2b}
     \href{https://bizky.ai/blog/umowa-o-prace-a-kontrakt-b2b-co-sie-bardziej-oplaca/}{\textit{Umowa o pracę a kontrakt B2B – jak zarobisz więcej?}}, bizky.ai
 
-    \bibitem{lamport94}
-    Leslie Lamport (1994) \emph{\LaTeX: a document preparation system}, Addison
-    Wesley, Massachusetts, 2nd ed.
+    \bibitem{rmse}
+    \href{https://help.qlik.com/pl-PL/cloud-services/Subsystems/Hub/Content/Sense_Hub/AutoML/scoring-regression.htm}{\textit{Ocena modeli regresji}}, qlik.com
 \end{thebibliography}
-
 
 
 \end{document}
