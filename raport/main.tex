@@ -591,6 +591,8 @@ kolejno \texttt{RandomForestRegressor} oraz \texttt{DecisionTreeRegressor}.
 ponieważ dawał najmniejsze błędy chociaż i tak w skali zarobków nie były one małe.
 Do uczenia okazało się, że lepiej wybrać podziałkę 80:20, 80\% dane treningowe a 20\% dane testowe. Wydaje mi się również, że aby uzyskać lepsze wyniki,
 należałoby zaktualizować zbiór danych o nowe oferty (głównie oferty dla juniorów).
+Oczywiście model model może być jeszcze lepiej rozwinięty jeśli dodane zostałby nowe cechy np. stopień naukowy lub nowe 
+technologie lub większe wyspecyfikowanie technologii.
 
 \quad Podczas pracy również można było sporządzić wykres, który przedstawiał najważniejsze zmienne w sensie wypływu na wynagrodzenie.
 
@@ -600,7 +602,19 @@ należałoby zaktualizować zbiór danych o nowe oferty (głównie oferty dla ju
     \caption{Zmienne mające wypłw na wynagrodzenie w ofercie pracy}
 \end{figure}
 
-\quad Jak łatwo zauważyć, doświadczenie było najważniejsze.
+\quad Jak łatwo zauważyć, doświadczenie miało największy wpływ na przewidywaną wartość.
+Kolejnymi zmiennymi, które mogły zaskoczyć był np. \textbf{AWS, SQL, Python}. 
+
+\section{Testowanie wyuczonego modelu}
+
+\quad Tak jak już wcześniej wspomniałem model, który uznałem za odpowiedni, czyli popełniający najmniejszy błąd
+spośród wszystkich to \texttt{RandoForestRegressor(n_estimators=80)}, dla podziałki 80:20. 
+Przetestuję model, który przewidzi mi pensje na b2b i na umowie o pracę w zależności od
+moich technologii, które znam. Zakładam, że test może dać trochę słabe wyniki, ponieważ
+model będzie musiał przewidzieć zarobki dla takich danych: 
+
+
+
 
 \end{document}
 
