@@ -4,7 +4,7 @@
 
 ### Spis treści projektu
 
-1. [**Raport**](./projekt/raport/main.pdf)
+1. [**Raport**](./raport/main.pdf)
 
 2. [**Scrapper z justjoin.it**](./src/scrappers/justjoinit.py)
 
