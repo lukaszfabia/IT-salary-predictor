@@ -11,14 +11,16 @@
 \usepackage{polski}
 \usepackage{tcolorbox}
 
-\title{Analiza ofert pracy w IT oraz tworzenie modelu przewidującego zarobki}
-\author{Łukasz Fabia}
-\date{20.05.2024}
+\title{Analiza ofert pracy w IT w Polsce w 2024 roku.}
+\author{Łukasz Fabia (272724) \\ MSiD Lab 09:15 TP \\ Informatyka Stosowana}
+\date{\today}
 
 \begin{document}
 
 \maketitle
 \tableofcontents
+
+\newpage
 
 \section{Wstęp}
 
@@ -555,7 +557,8 @@ potem był \texttt{DecisionTreeRegressor}, który miał gorsze wyniki niż w pop
 \quad Podsumowując, jeśli chodzi o stworzenie modelu to najlepszym będzie \newline \texttt{RandomForestRegressor(n\_estimators=80)},
 ponieważ dawał najmniejsze błędy chociaż i tak w skali zarobków nie były one małe.
 Do uczenia okazało się, że lepiej wybrać podziałkę 80:20, 80\% dane treningowe a 20\% dane testowe. Wydaje mi się również, że aby uzyskać lepsze wyniki,
-należałoby zaktualizować zbiór danych o nowe oferty (głównie oferty dla juniorów).
+należałoby zaktualizować zbiór danych o nowe oferty (głównie oferty dla juniorów). Warto dodać, że
+gdy kompilujemy skrypt to metryki mogą się różnić, najczęściej różnią się dla \texttt{RandomForestRegressor}, ale są to różnice rzędu +/- 20-50, ale kazdej metryki. Może to wynikać z tego jak dzielone są dane na treningowe i testowe.
 Oczywiście model model może być jeszcze lepiej rozwinięty jeśli dodane zostałby nowe cechy np. stopień naukowy lub nowe technologie lub większe wyspecyfikowanie technologii.
 
 \quad Podczas pracy również można było sporządzić wykres, który przedstawiał najważniejsze zmienne w sensie wypływu na wynagrodzenie.
@@ -566,7 +569,7 @@ Oczywiście model model może być jeszcze lepiej rozwinięty jeśli dodane zost
     \caption{Zmienne mające wypłw na wynagrodzenie w ofercie pracy}
 \end{figure}
 
-\quad Jak łatwo zauważyć, doświadczenie miało największy wpływ na przewidywaną wartość.
+\quad Jak łatwo zauważyć, \textbf{doświadczenie} miało największy wpływ na przewidywaną wartość.
 Kolejnymi zmiennymi, które miały wpływ to \textbf{typ umowy}, \textbf{AWS}, \textbf{miasto}, \textbf{typ pracy}.
 
 \section{Testowanie wyuczonego modelu}
@@ -594,11 +597,11 @@ ponieważ pracodawcy nie muszą ponosić kosztów dodatkowych podatków, składe
 
 \subsection{Wyniki testów}
 
-Pensja w lokalizacji \textbf{Wrocław} dla \textbf{Junior} znającego \textit{Docker/Kubernetes, Python, Linux, React, TypeScript, JavaScript}:
+\quad Pensja w lokalizacji \textbf{Wrocław} dla \textbf{Junior} znającego \textit{Docker/Kubernetes, Python, Linux, React, TypeScript, JavaScript}:
 
 \begin{enumerate}
-    \item 9110.12 PLN Brutto na umowie o pracę
-    \item 9805.69 PLN Brutto na b2b
+    \item 9380.35 PLN Brutto na umowie o pracę
+    \item 10153.79 PLN Brutto na b2b
 \end{enumerate}
 
 \quad Jak można widzieć powyżej wyniki są troche zawyżone, z drugiej strony są uzasadnione błędem \textbf{RMSE}, ale dla tego testu wyszło, że na b2b
@@ -606,8 +609,9 @@ zarabia się więcej niż na uopie, co ma sens. Ostatnią obserwacją może być
 chodzi mi o to, że bardziej liczy się konfiguracja technologii niż ich ilość, ponieważ model mógł nie dostać odpowiednich danych treninowych oraz warto dodać, że jeślie model dostał na treningu oferty
 z wysokimi zarobkami to wyniki będą zawyżone. Innym wyjaśnieniem może być to, że w ofertach dana technologia miała mniejszy bądź większy wpływ na wynagrodzenie/a.
 
-\quad Koniec końców udało się stworzyć jeden model przewidujący zarobki w zależności od innych zmiennych w ofercie pracy, który miał najmniejsze błędy spośród innych modeli, co jest zadowalające a
-przewidywane wartości są 'powiedzmy', że sensowne.\newline
+\quad Koniec końców udało się stworzyć jeden model przewidujący zarobki w zależności od
+innych zmiennych w ofercie pracy, który miał najmniejsze błędy spośród innych modeli, co jest
+zadowalające a przewidywane wartości są 'powiedzmy', że sensowne.\newline
 
 \begin{center}
     \href{https://github.com/lukaszfabia/RaportIT}{\textit{Link to całego projektu znajduje się na moim \textbf{GitHubie}}}
