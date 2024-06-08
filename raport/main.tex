@@ -237,6 +237,9 @@ Tutaj ilość ofert wyniósła zaledwie 159. W porównianiu do innych grup jest 
     \caption{Rozkłady zarobków dla poszczególnych umów dla seniorów}
 \end{figure}
 
+\quad Można zauważyć, że rozkłady przypominają rozkłady normalne, chociaż dla juniorów pensje na uop
+są bardziej wypłaszczone, co znaczy, że zarobki są bardziej zróżnicowane lub było zbyt mało ofert dla juniorów a oferty ze zbioru miały skrajne widełki na umowie o pracę. Dla seniorów zarobki na b2b są bardziej skupione wokół średniej.
+
 
 \subsection{Jakie technologie są najbardziej poszukiwane?}
 
@@ -320,7 +323,7 @@ warto zauważyć, że wykres nie różni się bardzo od poprzedniego. Jednak, to
     \caption{Powiązania między zarobkiem b2b a technologiami}
 \end{figure}
 
-\quad AWS, Git, Python, PHP mają wypłw na pensję na b2b.
+\quad AWS, Git, Python, PHP mają wypłw na pensję na b2b, ale nie jest on duży.
 
 \begin{figure}[H]
     \centering
@@ -328,7 +331,7 @@ warto zauważyć, że wykres nie różni się bardzo od poprzedniego. Jednak, to
     \caption{Powiązania między zarobkiem uop a technologiami}
 \end{figure}
 
-\quad PHP, Python, AWS, SQL, Go, Terraform mają wpływ na pensję na uop.
+\quad PHP, Python, AWS, SQL, Go, Terraform mają wpływ na pensję na uop, ale nie jest on duży.
 
 
 \section{Czy da się przewidzieć zarobki, w zależności od mojego tech-stacku?}
@@ -485,7 +488,7 @@ Pozostałe modele, czyli modele regresji liniowej mają pratykcznie te same wyni
 \quad Wyniki pokazały nam, że najlepszym modelem do przewidywania zarobków jest \texttt{RandomForestRegressor} z parametrami \texttt{n\_estimators=50},
 chociaż błędy były dość wysokie, ale może to wynikać z rozpiętości wiedełek pensji lub mogą być spowodowane małą ilością ofert pracy dla juniorów. Warto zauważyć, że
 dla najlepszego modelu dane były w miarę skupione w prostej wyznaczającej idealny wynik. Dopasowanie rozkładu było też całkiem dobre, ponieważ
-wykresy w większej części nachodziły na siebie.
+wykresy w większej części nachodziły na siebie. Histogramy były skupione wokół zera, co może oznaczać, że model dobrze przewiduje zarobki.
 
 
 \subsubsection{Wyniki dla podziału danych 60:40}
