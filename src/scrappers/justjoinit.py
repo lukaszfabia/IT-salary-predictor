@@ -1,17 +1,17 @@
 from random import randint
 import re
 import time
-from typing import List, Dict, Optional, Set, Tuple
+from typing import List, Dict, Set, Tuple
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.webdriver import WebDriver
-from selenium.webdriver.remote.webelement import WebElement
 from models.data_model import Offer
 from selenium import webdriver
-from selenium.webdriver.support.ui import WebDriverWait
-
-from selenium.webdriver.support import expected_conditions as EC
-
 from typing import Dict, List
+
+
+###############
+#   Synonyms  #
+###############
 
 experiences: Dict[str, List[str]] = {
     "Junior": ["Junior", "junior", "jun"],
@@ -181,6 +181,11 @@ LINKS: Dict[str, str] = {
 }
 
 
+###############
+#   Scrapper  #
+###############
+
+
 class PrepareOffer:
     name_xpath: str = (
         '//*[@id="__next"]/div[2]/div[1]/div/div[2]/div[2]/div[1]/div[2]/div[2]/h1'
@@ -195,10 +200,15 @@ class PrepareOffer:
     )
 
     def __init__(self, driver: WebDriver, link: str):
-        self.link = link
-        self.driver = driver
+        self.link: str = link
+        self.driver: WebDriver = driver
 
     def get_offer(self) -> Offer:
+        """preprocess offer
+
+        Returns:
+            Offer: offer wrapped in Offer class
+        """
         self.driver.get(self.link)
         # return self.get_name(), self.get_experience(), self.get_operating_mode()
         min_b2b, max_b2b, min_uop, max_uop = self.get_salary()
@@ -216,20 +226,33 @@ class PrepareOffer:
         # return self.get_locations()
 
     def get_locations(self) -> List[str]:
+        """getting a locations from the offer
+
+        Returns:
+            List[str]: list with normalized locations
+        """
+        # try to click cookies button
         try:
             self.driver.find_element(By.ID, value="cookiescript_accept").click()
         except:
             pass
+
+        # general location
         first_loc: str = self.driver.find_element(
             By.CLASS_NAME, value="css-1seeldo"
         ).text
 
         first_loc = re.split(r"\s*,\s*", first_loc)[0]
 
-        for key in locations.keys():
-            if first_loc in locations[key]:
-                first_loc = key
+        # for key in locations.keys():
+        #     if first_loc in locations[key]:
+        #         first_loc = key
 
+        first_loc = next(
+            (key for key in locations if first_loc in locations[key]), first_loc
+        )
+
+        # try to click multilocation button
         try:
             self.driver.find_element(By.NAME, value="multilocation_button").click()
         except:
@@ -238,6 +261,7 @@ class PrepareOffer:
 
         res: Set[str] = set()
         res.add(first_loc)
+        # matching rest of the locations
         for loc in locs:
             tmp: str = re.split(r"\s*,\s*", loc.text)[0]
             for k in locations.keys():
@@ -246,17 +270,25 @@ class PrepareOffer:
         return list(res)
 
     def get_technologies(self) -> List[str]:
+        """getting a technologies from the offer
+
+        Returns:
+            List[str]: list with normalized technologies
+        """
         tech_stack: List[str] = [
             e.text for e in self.driver.find_elements(By.CLASS_NAME, value="css-x1xnx3")
         ]
         res: Set[str] = set()
         for e in tech_stack:
+            # maybe useless
             if isinstance(e, str):
                 for k, v in technologies.items():
+                    # check if any of the aliases is in the string
                     if any(
                         re.match(rf"^{re.escape(alias)}$", e, re.IGNORECASE)
                         for alias in v
                     ):
+                        # add key (normalized technology name)
                         res.add(k)
         return list(res)
 
@@ -300,6 +332,16 @@ class PrepareOffer:
     def get_info(
         self, x_path: str, match_dict: Dict[str, List[str]], is_title: bool = False
     ) -> str:
+        """general function to get information from the offer
+
+        Args:
+            x_path (str): path to the element
+            match_dict (Dict[str, List[str]]): ditcionary with matching values
+            is_title (bool, optional): handling title cuz it hasnt dict. Defaults to False.
+
+        Returns:
+            str: _description_
+        """
         element: str = self.driver.find_element(By.XPATH, value=x_path).text
         if not is_title:
             for key in match_dict.keys():
@@ -309,9 +351,16 @@ class PrepareOffer:
             return element.replace(",", " ")
 
 
-def get_links_to_offers(driver, link: str) -> List[str]:
+def get_links_to_offers(driver: WebDriver, link: str) -> List[str]:
     """Returns all links to offers.
     warining: use Safari driver on osx
+
+    Args:
+        driver (WebDriver): selenium webdriver
+        link (str): link to justjoin.it
+
+    Returns:
+        List[str]: set of links casted to offers list
     """
     driver.get(link)
     try:
@@ -353,6 +402,14 @@ def get_links_to_offers(driver, link: str) -> List[str]:
 
 
 def load_links(filename: str = "new_links.txt") -> List[str]:
+    """load links from file to list
+
+    Args:
+        filename (str, optional): file name. Defaults to "new_links.txt".
+
+    Returns:
+        List[str]: list with links
+    """
     links: List[str] = list()
     with open(filename) as f:
         for line in f:
