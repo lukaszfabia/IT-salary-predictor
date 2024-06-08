@@ -1,7 +1,7 @@
 from random import randint
 import re
 import time
-from typing import List, Dict, Set, Tuple
+from typing import List, Dict, Optional, Set, Tuple
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.remote.webelement import WebElement
@@ -309,9 +309,9 @@ class PrepareOffer:
             return element.replace(",", " ")
 
 
-def get_links_to_offers(driver: webdriver.Chrome, link: str) -> List[str]:
+def get_links_to_offers(driver, link: str) -> List[str]:
     """Returns all links to offers.
-    warining: works on gnu/linux, on macosx may not work
+    warining: use Safari driver on osx
     """
     driver.get(link)
     try:
@@ -346,27 +346,24 @@ def get_links_to_offers(driver: webdriver.Chrome, link: str) -> List[str]:
             n = 1
             time.sleep(randint(3, 5))
 
-            if old_count == new_count:  # If the number of unique links remains the same
-                break  # Break the loop
+            if old_count == new_count:  # end
+                break
 
-        # Scroll to load more content
     return list(set_of_links)
 
 
-def load_links() -> List[str]:
+def load_links(filename: str = "new_links.txt") -> List[str]:
     links: List[str] = list()
-    with open("new_links.txt") as f:
+    with open(filename) as f:
         for line in f:
             links.append(line.strip())
     return links
 
 
 if __name__ == "__main__":
-    # print(
-    #     "Name, min_b2b, max_b2b, min_uop, max_uop, technologies, locations, experience, operating_mode"
-    # )
+    # res = get_links_to_offers(webdriver.Safari(), LINKS["js"])
     print("[")
-    read_links = load_links()
+    read_links = load_links("new_links.txt")
     for index, link in enumerate(read_links):
         try:
             preprocess = PrepareOffer(driver=webdriver.Chrome(), link=link)

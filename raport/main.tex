@@ -25,72 +25,74 @@
 \section{Wstęp}
 
 \quad Celem badań jest analiza danych dotyczących ofert pracy w IT. W swojej pracy postaram się
-odpowiedzieć na pytanie, jakie są najbardziej poszukiwane umiejętności w branży IT oraz ile można zarobić
-znając dane języki, frameworki czy narzędzia. W tym celu stworze model, który będzie przewidywał zarobki w zależności od danych wejściowych,
+odpowiedzieć na pytanie, które umiejętności w branży IT są najbardziej poszukiwane oraz jakie jest wynagrodzenie,
+w zależności od znajomości danych języków, frameworków czy narzędzi. W tym celu stworzę model, który będzie przewidywał stawki wynagrodzenia w zależności od danych wejściowych,
 o których później.
 
 
 \section{Dane}
 
-\quad Dane pozyskam z serwisu \href{https://justjoin.it/}{justjoin.it}, który zbiera oferty pracy z wielu różnych serwisów, zatem
-ofert pracy będzie całkiem sporo. Na stronie mamy katergorie, które mogą być przydatne do filtrowania danych, ale są one mało przydatne, ponieważ one raczej są przypisane do ofert, które nawiązują w jakiś sposób do np. JS. katergorie są następujące:
-JS, PHP, Ruby, Python, Java, Net, Mobile, C, DevOps, Security, Data, Go, Game, Scala. Moje dane będą właśnie z tych podstron.
-\quad Dodatkowo analizuję zarobki tylko na b2b oraz na umowie o prace (uop), ponieważ są to najbardziej popularne formy zatrudnienia w IT a inne formy takie jak umowa o zlecenie czy umowa o staż pratykcznie nie występują. Do analizy będę również brał pod uwagę lokalizację.
+\quad Dane pozyskam z serwisu \href{https://justjoin.it/}{justjoin.it}, który zbiera oferty pracy z wielu różnych stron internetowych. Na wyżej wymienionej stronie mamy katergorie, które mogą być przydatne do filtrowania danych. Są on mało jednak mało przydatne, ponieważ przypisane do ofert, nawiązują w jakiś sposób do np. JS. Katergorie są następujące:
+JS, PHP, Ruby, Python, Java, Net, Mobile, C, DevOps, Security, Data, Go, Game, Scala. Moje dane będą pozyskiwane z tych podstron.\\
+\quad Przeanalizuję zarobki tylko na b2b oraz zarobki na podstawie umowy o prace (uop). Są to najbardziej popularne formy zatrudnienia w IT. Umów takich jak zlecenie, umowa o staż pratykcznie nie występują. Do analizy będę również brał pod uwagę inne parametry, które występują w ofercie.
 
 \textbf{\newline Technologia} - język programowania, framework, narzędzie, które jest wymagane w ofercie pracy.
 
 \subsection{Model danej}
 \quad Dane będą zawierały informacje o ofertach pracy, takie jak:
 \begin{itemize}
-    \item tytuł oferty
-    \item widełki dla B2B
-    \item widełki dla UOP
-    \item technologie dotyczące umowy
-    \item lokalizacja
-    \item doświadczenie {junior, mid, senior}
-    \item typ pracy {stacjonarnie, hybrydowo, zdalnie}
+    \item tytuł oferty,
+    \item widełki dla B2B,
+    \item widełki dla UOP,
+    \item technologie dotyczące umowy,
+    \item lokalizacja,
+    \item doświadczenie: \textbf{junior, mid, senior},
+    \item typ pracy: \textbf{stacjonarnie, hybrydowo, zdalnie.}
 \end{itemize}
 
 \subsection{Obsługa technologii, lokalizacji}
 
-\quad Najpierw zdefiniuje sobie słownik klucz, wartość, gdzie klucz to ustandaryzowana technologia, a wartość do synonimy tej technologii.
+\quad Najpierw zdefiniuję słownik - klucz, wartość, gdzie klucz to ustandaryzowana technologia, a wartość do synonimy tej technologii.
 
-\textit{np. \ "JavaScript": [
+\textit{np. : \ "JavaScript": [
 "javascript",
 "js",
 "node.js",
 "nodejs",
 "express.js",
 "expressjs",
-],}
+].}
 
-\quad Dzięki temu będę mógł przekonwertować technologie z oferty pracy na wektor binarny, gdzie 1 oznacza, że technologia jest wymagana, a 0, że nie jest wymagana. Kolejnym
-krokiem będzie obsługa lokalizacji. W tym przypadku jeśli oferta dot. kilku miast to znaczy, że pojawi się w zbiorze
-klika ofert z tymi samymi danymi, ale dla różnych miast.
+\quad Celem tego zabiegu jest zmniejszenie liczby technologii, które będę brał pod uwagę. Kolejnym
+krokiem będzie obsługa lokalizacji. W tym przypadku, jeśli oferta dotyczy kilku miast, to po przetworzeniu pojawi się w zbiorze
+klika ofert z tymi samymi danymi, ale dla różnych miast. Podobnie obsłużę kontrakty, które są w ofercie pracy, ponieważ z punktu
+prawnego, jeśli oferta dotyczy obu kontraktów to tak naprawdę są to dwie różne oferty pracy.
 
 
 \subsection{Pozykiwanie danych}
 
-\quad Dane będą pozyskiwane z ww. serwisu, za pomocą narzędzi do web scrappingu w moim przypadku będzie
-to \texttt{Selenium}, ponieważ strona ma dynamicznie ładowany content.
+\quad Skorzystam z narzędzi do web scrappingu, w moim przypadku będzie
+to \texttt{Selenium}, ponieważ strona ma dynamicznie ładowany content.\\
 
 
 \textbf{Kroki:}
 
 \begin{itemize}
-    \item napisanie skryptu pobierającego linki do ofert pracy z danej kategorii, ponieważ nie chcemy śmiecowych ofert typu Product manager
-    \item napisanie skryptu przetwarzającego linki do ofert pracy, aby pobrać dane z oferty
-    \item przekierowanie wyniku do pliku json.
-    \item normalizacja oraz oczyszczanie danych, kodowanie technologii, do wektora przy pomocy MultiLabelBinarizer z \texttt{sklearn}
-    \item kodowanie zmiennych kategorycznych (np. miasta, typ pracy, kontrakty)
-    \item wzięcie średniej zarobków potem usunięcie widełek w zarobkach (np. 10-15k $\implies$ 12.5k)
-    \item rozbicie ofert pracy dla kontraktów oraz miasta np. mamy ofertę dla miasta A i B obie mają podane
-          zarobki na b2b i uop, więc powstaną 4 nowe oferty, czyli A\_uop, A\_b2b, B\_uop, B\_b2b.
-    \item usunięcie ofert z wynagrodzniem godzinowym bo zalezą one od ilości przepracowanych godzin
-    \item usunięcie tytułów ofert
+    \item napisanie skryptu pobierającego linki do ofert pracy z danej kategorii, ponieważ nie chcemy śmiecowych ofert typu Product manager,
+    \item napisanie skryptu przetwarzającego linki do ofert pracy, aby pobrać dane z oferty,
+    \item przekierowanie wyniku do pliku json,
+    \item normalizacja oraz oczyszczanie danych, kodowanie technologii do wektora przy pomocy MultiLabelBinarizer z \texttt{sklearn},
+    \item kodowanie zmiennych kategorycznych (np. miasta, typ pracy, kontrakty),
+    \item wzięcie średniej zarobków, a następnie usunięcie widełek w zarobkach (np. 10-15k $\implies$ 12.5k),
+    \item rozbicie ofert pracy dla kontraktów oraz miast, np. mamy ofertę dla miasta A i B obie mają podane
+          zarobki na b2b i uop, więc powstaną 4 nowe oferty, czyli A\_uop, A\_b2b, B\_uop, B\_b2b,
+    \item usunięcie ofert, w których określona została stawka godzinowa, ponieważ nie można jej określić w łatwy sposób,
+    \item usunięcie tytułów ofert.
 \end{itemize}
 
-\textit{Ofert ze stawką godzinową było kilka więc nie wypływają one na wyniki.}
+\begin{center}
+    \textit{Ofert ze stawką godzinową było kilka, więc nie wpływają one na wyniki.}
+\end{center}
 
 \newpage
 
@@ -182,9 +184,7 @@ dla kontraktu B2B oraz UOP.
     \caption{Średnie zarobki w PLN dla \texttt{seniora} w Polsce}
 \end{table}
 
-\quad Generalnie zarobki wyszły całkiem sensownie,
-ponieważ dla Mida i Seniora mamy większą pensję na B2B niż na UOP, dla juniora jest na odwrót, ale nie mam pojęcia dlaczego tak się
-dzieje, może na umowę o pracę dostają się bardzo dobrzy programiści albo jest poprostu mało ofert pracy dla juniora na b2b.
+\quad Wynagrodzenia te są na dobrym poziomie, ponieważ dla Mida i Seniora mamy większą pensję na b2b niż na uop, dla juniora jest na odwrót. Przyczyną może być to, że umowę o pracę dostają bardzo dobrzy programiści albo jest mało ofert pracy dla juniora na b2b.
 
 
 \newpage
@@ -196,28 +196,25 @@ dzieje, może na umowę o pracę dostają się bardzo dobrzy programiści albo j
     \caption{Rozkład typów pracy}
 \end{figure}
 
-\quad Jak widać najwięcej ofert pracy dotyczy pracy zdalnej.
+\quad Najwięcej ofert dotyczy pracy zdalnej.
 
 
 \subsection{Kogo szukają pracodawcy?}
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth]{../analysis/plots/rozkłady/rozkład_doświadczenia.png}
+    \includegraphics[width=0.8\textwidth]{../analysis/plots/rozkłady/rozkład_doświadczenia.png}
     \caption{Rozkład typów pracy}
 \end{figure}
 
-\quad Tak jak można było się spodziewać - najwięcej ofert pracy jest dla seniorów,
-stąd też wynika dlaczego tak dużo kontraktów dotyczy pracy zdalnej, ponieważ pracodawca ma większe "zaufanie" do seniora niż do juniora. Chociaż
-warto powiedzieć sytuacja midów jest również dobra. Gorzej jest z ofertami dla młodych programistów.
-Tutaj liczba ofert wyniosła zaledwie 159, co jest bardzo małą liczbą w porównaniu do innych grup.
+\quad Tak jak można było się spodziewać - najwięcej ofert pracy jest dla seniorów. Pracodawca ma większe zaufanie do Seniora/Mida. Gorzej jest z ofertami dla młodych programistów.
+Tutaj procent ofert wyniósł zaledwie 2.8\%. W porównianiu do innych grup jest to niewiele.
 
 \begin{center}
     \textit{Czy to oznacza, że młodzi programiści mają trudniej, a słynne "eldorado" w IT jest tylko dla doświadczonych programistów?}
 \end{center}
 
-\quad Tutaj można powiedzieć, że juniorzy mają trudniej żeby \textbf{wejść} do branży, ale zarobki po wejściu są naprawdę atrakcyjne,
-no, ale tutaj problem może być z wejściem.
+\quad Można stwierdzić, że juniorzy mają trudniejszy start w branży IT, ale jeśli im się uda, to zarobki są atrakcyjne.
 
 
 \subsection{Jak rozkładają się zarobki?}
@@ -249,10 +246,8 @@ no, ale tutaj problem może być z wejściem.
     \caption{Popularne technologie w ofertach pracy w Polsce}
 \end{figure}
 
-\quad Tutaj moim zdaniem troche zaskoczenie ponieważ bez \texttt{SQL} ciężko znaleźć prace w IT, czyli
-bazy danych to jest podstawa przy rekrutowanu się do pracy. Oczywiście nie mogło zabraknąć \texttt{Pythona} oraz \texttt{JavaScriptu} jeśli chodzi o języki skryptowe.
-Co warto zazanczyć narzędzia takie jak \texttt{Docker} czy \texttt{Kubernetes} również są bardzo popularne i warto je znać. \texttt{Java} wygrywa z \texttt{C\#} a \texttt{GNU/Linux} dobrze jest znać.
-
+\quad Najpopularniejszą technologią okazał się \texttt{SQL}. Bez jego znajomości trudno znaleźć pracę w IT. Oczywiście nie mogło zabraknąć \texttt{Pythona} oraz \texttt{JavaScriptu}, jeśli chodzi o języki skryptowe.
+Co warto, zazanczyć narzędzia takie jak \texttt{Docker} czy \texttt{Kubernetes} również są bardzo popularne i warto je znać. \texttt{Java} wygrywa z \texttt{C\#}.
 
 \subsection{Gdzie jest największy popyt na programistów?}
 
@@ -262,8 +257,8 @@ Co warto zazanczyć narzędzia takie jak \texttt{Docker} czy \texttt{Kubernetes}
     \caption{Popularne miasta w ofertach pracy w Polsce}
 \end{figure}
 
-\quad Zestawienie miast jest zgodne z oczekiwaniami, najwięcej ofert pracy jest kolejno w \textbf{Warszawie}, \textbf{Krakowie} oraz \textbf{Wrocławiu}, chociaż
-\textbf{Gdańsk} również pojawiał się w dużej ilości ofert pracy.
+\quad Zestawienie miast jest zgodne z oczekiwaniami, najwięcej ofert pracy jest kolejno w: \textbf{Warszawie}, \textbf{Krakowie} oraz \textbf{Wrocławiu}, chociaż w
+\textbf{Gdańsku} również pojawiawiły się stosunkowo duże ilości ofert pracy.
 
 
 \subsection{Gdzie poszukiwani są juniorzy?}
@@ -275,7 +270,7 @@ Co warto zazanczyć narzędzia takie jak \texttt{Docker} czy \texttt{Kubernetes}
 \end{figure}
 
 \quad \textbf{Warszawa} jest najbardziej przyjazna dla juniorów, ale
-warto zauważyć, że wykres nie różni się bardzo od poprzedniego z jednym, \textit{ale} - \textbf{Gdańsk} jest na 3 miejscu w zestawieniu dla juniorów, co może być zaskoczeniem.
+warto zauważyć, że wykres nie różni się bardzo od poprzedniego. Jednak, to \textbf{Gdańsk} jest na 3 miejscu w zestawieniu dla juniorów.
 
 \section{Powiązania między danymi}
 
@@ -290,16 +285,15 @@ warto zauważyć, że wykres nie różni się bardzo od poprzedniego z jednym, \
 \quad \textbf{Co można zauważyć?}
 
 \begin{enumerate}
-    \item HTML i CSS idą ze prawie w parze - co jest zrozumiałe, bo to podstawy front-endu
-    \item Przy Javie warto znać Springa
-    \item React i JS i TS często pojawiają sie razem w ofertach pracy obok HTML i CSS
-    \item Jak sie uczy Django to warto znać inne frameworki backendowe takie jak Flask czy FastAPI
-    \item Jak sie idzie w Embedded to warto znać C/C++ oraz Linux
-    \item Technologie microsoftu takie jak C\#, Azure występują razem
+    \item HTML i CSS idą ze prawie w parze - co jest zrozumiałe, bo to podstawy frontendu.
+    \item Przy Javie warto znać Springa.
+    \item React i JS i TS często pojawiają sie razem w ofertach pracy obok HTML i CSS.
+    \item Ucząc się Django to warto znać inne frameworki backendowe takie jak Flask czy FastAPI.
+    \item Interesując się Embedded'em warto znać C/C++ oraz Linux.
+    \item Technologie microsoftu takie jak C\#, Azure występują razem.
 \end{enumerate}
 
-\quad To tylko kilka przykładów wymienionych wynikający z obrazka powyżej, ale warto zauważyć, że nie ma tutaj dużo
-powiązań między technologiami, co może wynikać z tego, że są zbyt różne, aby były powiązane.
+\quad To tylko kilka przykładów wynikających z wykresu powyżej, ale warto zauważyć, że nie ma tu silnych powiązań między technologiami. Oferty pracy są zróznicowane i zależą od firmy.
 
 
 \subsection{Powiązania między innymi zmiennymi}
@@ -313,8 +307,8 @@ powiązań między technologiami, co może wynikać z tego, że są zbyt różne
 \quad \textbf{Co można zauważyć?}
 
 \begin{enumerate}
-    \item Średnia pensja jest mocno powiązana z doświadczeniem
-    \item Typ kontraktu też wiąże się z doświadczeniem
+    \item Średnia pensja jest mocno powiązana z doświadczeniem.
+    \item Typ kontraktu zależy od doświadczenia.
 \end{enumerate}
 
 
@@ -341,54 +335,56 @@ powiązań między technologiami, co może wynikać z tego, że są zbyt różne
 
 \subsection{Ogólnie o problemie}
 
-\quad \textbf{Oczywiście}, że tak, kiedy mamy dane to możemy nauczyć model, który na wejściu dostanie zmienne i przewidzi dla nas
-zarobki. Dokładniej mówiąc model otrzyma na wejściu dane takie jak:
+\quad \textbf{Oczywiście}, że tak, da się przewiedzieć zarobki od tech-stacku. Kiedy mamy dane to możemy nauczyć model, który na wejściu dostanie zmienne i przewidzi dla nas
+zarobki. Dokładniej mówiąc, model otrzyma na wejściu dane takie jak:
 
 \texttt{Input:}
 
 \begin{itemize}
-    \item Tech-stack
-    \item Lokalizacja
-    \item Typ pracy
-    \item Doświadczenie
-    \item Typ kontraktu (B2B, UoP)
+    \item tech-stack,
+    \item lokalizacja,
+    \item typ pracy,
+    \item doświadczenie,
+    \item typ kontraktu (B2B, UoP).
 \end{itemize}
 
 \texttt{Output:}
 
 \begin{itemize}
-    \item Zarobki w PLN
+    \item Zarobki w PLN.
 \end{itemize}
 
 
 \subsection{Dobór modeli}
 
-\quad Modele które będą wykorzystane w analizie to:
+\quad Modele, które będą wykorzystane w analizie to:
 
 \begin{enumerate}
-    \item Regresja liniowa
+    \item Regresja liniowa:
           \begin{itemize}
               \item \texttt{LinearRegression}
               \item \texttt{Ridge}
               \item \texttt{Lasso}
           \end{itemize}
-    \item \texttt{Decision tree}
-    \item \texttt{Random forest}
+    \item \texttt{DecisionTreeRegressor}
+    \item \texttt{RandomForestRegressor}
 \end{enumerate}
 
-\textit{Wszyskie modele pochodzą z modułu \texttt{sklearn} dostępniej pod \href{https://scikit-learn.org/stable/}{tym linkiem}}
+\textit{Wszyskie modele pochodzą z modułu \href{https://scikit-learn.org/stable/}{skelearn}.}
 
 \subsection{Trochę statystyki - metryki}
 
-\quad Do oceny modeli wykorzystam metryki takie jak, ale wybierać będę po RMSE, reszta metryk jest w ramach ciekawostki:
+\quad Do oceny modeli wykorzystam metryki takie jak:
 
 \begin{itemize}
-    \item \textbf{Root Mean Squared Error} - pierwiastek z średniego błędu kwadratowego
-    \item \textbf{R-squared} - współczynnik determinacji $R^2$
-    \item \textbf{Mean Absolute Error} - średni błąd bezwzględny
+    \item \textbf{Root Mean Squared Error} - pierwiastek z średniego błędu kwadratowego,
+    \item \textbf{R-squared} - współczynnik determinacji $R^2$,
+    \item \textbf{Mean Absolute Error} - średni błąd bezwzględny,
 \end{itemize}
 
-\subsubsection{Pierwiastek z średniego błędu kwadratowego}
+\quad ale wybrać będę po RMSE.
+
+\subsubsection{Pierwiastek ze średniego błędu kwadratowego}
 
 \quad \textbf{Root Mean Squared Error (RMSE)} - to pierwiastek z MSE, daje nam miarę błędu przewidywań w tych samych jednostkach co dane wejściowe.
 Można go interpretować jako średnią oczekiwaną różnicę +/- między wartością przewidywaną a rzeczywistą \cite{rmse}.
@@ -415,17 +411,14 @@ Jest bardziej odporny na wartości odstające niż RMSE (outlinery), ponieważ n
 
 \subsection{Jak to zrobię?}
 
-\quad Moje podejście opiera się na wybraniu modeli regresji liniowej, drzewa decyzyjnego oraz lasu losowego, które będą
+\quad Moje rozwiązanie problemu opiera się na wybraniu modeli regresji liniowej, drzewa decyzyjnego oraz lasu losowego, które będą
 tuningowane za pomocą \texttt{GridSearchCV} w celu znalezienia najlepszych hiperparametrów. Wyniki są dostępne w folderze
-\texttt{../analysis/models\_tuning.csv}. Kolejnym krokiem jest przeprowadzenie uczenia modeli i wybranie najlepszego modelu
-na podstawie metryk. Następnie przewidzę zarobki dla kilku tech-stacków, a na końcu przedstawię wyniki w postaci wizualizacji.
+\texttt{../analysis/models\_tuning.csv}. Kolejnym krokiem jest przeprowadzenie uczenia modeli i wybranie najlepszego
+na podstawie RMSE. Następnie przewidzę zarobki dla kilku danych wejściowych, a na końcu przedstawię wyniki w postaci wizualizacji.\\
 
 \begin{abstract}
     \quad W następnych rodziałach skupię się na wynikach modeli, a także na wizualizacji wyników, aby nie
-    tworzyć zbyt długiego raportu nie będe analizować słabych modeli tylko skupię się na dwóch najlepszych modelach.
-
-    \textbf{Reszta danych: } Wszyskie wyniki z uczenia zostaną zapisane w folderze \texttt{../analysis/plots/wyniki/} ew. można też
-    podejrzeć plik z rozwiązaniem problemu w \texttt{../analysis/analysis.ipynb}.
+    tworzyć zbyt długiego raportu, nie będe analizować słabych modeli tylko skupię się na dwóch najlepszych. Wszyskie wyniki z uczenia zostaną zapisane w folderze \texttt{../analysis/plots/wyniki/} ew. można też podejrzeć plik z rozwiązaniem problemu w \texttt{../analysis/analysis.ipynb}.
 
     \quad Stosowane podziałki to 80:20, czyli 80\% danych do uczenia, a 20\% do testowania modelu oraz 60:40.
 \end{abstract}
@@ -446,10 +439,10 @@ na podstawie metryk. Następnie przewidzę zarobki dla kilku tech-stacków, a na
 \end{table}
 
 
-\quad Łatwo widzieć, że najlepszym modelem jest \texttt{RandomForestRegressor}, który ma
+\quad Łatwo zauważyć, że najlepszym modelem jest \texttt{RandomForestRegressor}, który ma
 najniższe wartości błędów oraz najwyższy współczynnik determinacji, kolejnym
 będzie \texttt{DecisionTreeRegressor}, choć nie jest on idealny powiedziałbym, słaby.
-Co do reszty modele regresji liniowej mają pratykcznie te same wyniki.
+Pozostałe modele, czyli modele regresji liniowej mają pratykcznie te same wyniki.
 
 \begin{figure}[H]
     \centering
@@ -489,9 +482,9 @@ Co do reszty modele regresji liniowej mają pratykcznie te same wyniki.
 
 \subsubsection{Podsumowanie wyników dla 80:20}
 
-\quad Wyniki pokazały nam, że najlepszym modelem do przewidywania zarobków od innych danych w ofercie jest \texttt{RandomForestRegressor} z parametrami \texttt{n\_estimators=80},
-chociaż błędy były dość wysokie, ale może to wynikać z dużego zakresu pensji oraz mogą być spowodowane małą ilością ofert pracy dla juniorów. Co warto zauważyć,
-w najlepszego modelu dane były w miarę skupione w prostej wyznaczającej idealny wynik. Dopasowanie rozkładu było też całkiem dobre, ponieważ
+\quad Wyniki pokazały nam, że najlepszym modelem do przewidywania zarobków jest \texttt{RandomForestRegressor} z parametrami \texttt{n\_estimators=80},
+chociaż błędy były dość wysokie, ale może to wynikać z rozpiętości wiedełek pensji lub mogą być spowodowane małą ilością ofert pracy dla juniorów. Warto zauważyć, że
+dla najlepszego modelu dane były w miarę skupione w prostej wyznaczającej idealny wynik. Dopasowanie rozkładu było też całkiem dobre, ponieważ
 wykresy w większej części nachodziły na siebie.
 
 
@@ -554,14 +547,14 @@ ilości ofert. Warto zauważyć, że najlepszy model to \texttt{RandomForestRegr
 potem był \texttt{DecisionTreeRegressor}, który miał gorsze wyniki niż w poprzednim teście. Warto zauważyć, że modele regresji liniowej osiągnęły lepsze wyniki jeśli chodzi o błędy, ale współczynnik determinacji był gorszy niż dla poprzedniego podziału.
 
 \section{Podsumowanie}
-\quad Podsumowując, jeśli chodzi o stworzenie modelu to najlepszym będzie \newline \texttt{RandomForestRegressor(n\_estimators=80)},
+\quad Najlepszym modelem będzie \texttt{RandomForestRegressor(n\_estimators=80)},
 ponieważ dawał najmniejsze błędy chociaż i tak w skali zarobków nie były one małe.
-Do uczenia okazało się, że lepiej wybrać podziałkę 80:20, 80\% dane treningowe a 20\% dane testowe. Wydaje mi się również, że aby uzyskać lepsze wyniki,
+Do uczenia modelu lepiej wybrać podziałkę 80:20. Wydaje mi się również, że aby uzyskać lepsze wyniki,
 należałoby zaktualizować zbiór danych o nowe oferty (głównie oferty dla juniorów). Warto dodać, że
-gdy kompilujemy skrypt to metryki mogą się różnić, najczęściej różnią się dla \texttt{RandomForestRegressor}, ale są to różnice rzędu +/- 20-50, ale kazdej metryki. Może to wynikać z tego jak dzielone są dane na treningowe i testowe.
-Oczywiście model model może być jeszcze lepiej rozwinięty jeśli dodane zostałby nowe cechy np. stopień naukowy lub nowe technologie lub większe wyspecyfikowanie technologii.
+gdy kompilujemy skrypt to metryki mogą się różnić dla \texttt{RandomForestRegressor}, ale są to różnice rzędu 20-50 +/-, metryki. Może to wynikać z faktu jak dzielone są dane na treningowe i testowe.
+Oczywiście, model może być jeszcze lepiej rozwinięty, jeśli dodane zostałby nowe cechy, np. stopień naukowy lub nowe technologie lub większe wyspecyfikowanie technologii.
 
-\quad Podczas pracy również można było sporządzić wykres, który przedstawiał najważniejsze zmienne w sensie wypływu na wynagrodzenie.
+\quad Podczas pracy również można było sporządzić wykres, który przedstawiał najważniejsze zmienne wypływające na wynagrodzenie.
 
 \begin{figure}[H]
     \centering
@@ -572,12 +565,13 @@ Oczywiście model model może być jeszcze lepiej rozwinięty jeśli dodane zost
 \quad Jak łatwo zauważyć, \textbf{doświadczenie} miało największy wpływ na przewidywaną wartość.
 Kolejnymi zmiennymi, które miały wpływ to \textbf{typ umowy}, \textbf{AWS}, \textbf{miasto}, \textbf{typ pracy}.
 
+\newpage
+
 \section{Testowanie wyuczonego modelu}
 
 \quad Tak jak już wcześniej wspomniałem model, który uznałem za odpowiedni, czyli popełniający najmniejszy błąd
 spośród wszystkich to \texttt{RandoForestRegressor(n\_estimators=80)}, dla podziałki 80:20.
-Przetestuję model, który przewidzi mi pensje na b2b i na umowie o pracę w zależności od
-moich technologii, które znam. Najważniejszą rzeczą jest tutaj to, żeby zarobki na b2b były większe niż na uopie,
+Przetestuję model, który przewidzi mi pensję na b2b i na umowie o pracę w zależności od technologii, które znam. Najważniejszą rzeczą jest tutaj to, żeby zarobki na b2b były większe niż na uopie,
 ponieważ pracodawcy nie muszą ponosić kosztów dodatkowych podatków, składek i świadczeń \cite{uop_vs_b2b}.
 
 \begin{itemize}
@@ -599,19 +593,22 @@ ponieważ pracodawcy nie muszą ponosić kosztów dodatkowych podatków, składe
 
 \quad Pensja w lokalizacji \textbf{Wrocław} dla \textbf{Junior} znającego \textit{Docker/Kubernetes, Python, Linux, React, TypeScript, JavaScript}:
 
-\begin{enumerate}
-    \item 9380.35 PLN Brutto na umowie o pracę
+\begin{itemize}
+    \item 9380.35 PLN Brutto na umowie o pracę,
     \item 10153.79 PLN Brutto na b2b
+\end{itemize}
+
+\textbf{Wnioski po analizie zaprezentowanych wyników:}
+
+\begin{enumerate}
+    \item Istotna jest konfiguracja technologii w procesie tworzenia modelu a nie jej ilość.
+    \item Jeśli model dostał na treningu oferty z wysokimi zarobkami to wyniki będą trochę zawyżone.
+    \item Rodzaj zastosowanej technologii ma wpływ na większe lub mniejsze wynagrodzenie.
 \end{enumerate}
 
-\quad Jak można widzieć powyżej wyniki są troche zawyżone, z drugiej strony są uzasadnione błędem \textbf{RMSE}, ale dla tego testu wyszło, że na b2b
-zarabia się więcej niż na uopie, co ma sens. Ostatnią obserwacją może być, ilość technologii na wejściu, nie ma istotnego wpływu,
-chodzi mi o to, że bardziej liczy się konfiguracja technologii niż ich ilość, ponieważ model mógł nie dostać odpowiednich danych treninowych oraz warto dodać, że jeślie model dostał na treningu oferty
-z wysokimi zarobkami to wyniki będą zawyżone. Innym wyjaśnieniem może być to, że w ofertach dana technologia miała mniejszy bądź większy wpływ na wynagrodzenie/a.
-
-\quad Koniec końców udało się stworzyć jeden model przewidujący zarobki w zależności od
-innych zmiennych w ofercie pracy, który miał najmniejsze błędy spośród innych modeli, co jest
-zadowalające a przewidywane wartości są 'powiedzmy', że sensowne.\newline
+\quad Myślę, że udało mi się stworzyć przykładowy model przewidujący zarobki w zależności od innych
+zmiennych w ofercie pracy. Wśród modeli ten okazał się mieć najmniej błędów, co jest
+satysfakcjonujące, a przewidywane wartości są, powiedzmy jasno, sensowne.\\
 
 \begin{center}
     \href{https://github.com/lukaszfabia/RaportIT}{\textit{Link to całego projektu znajduje się na moim \textbf{GitHubie}}}
