@@ -13,3 +13,6 @@ __pycache__
 tempCodeRunnerFile.*
 
 *.synctex.gz(busy)
+
+
+*.ipynb
