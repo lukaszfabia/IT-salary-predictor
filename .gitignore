@@ -15,4 +15,4 @@ tempCodeRunnerFile.*
 *.synctex.gz(busy)
 
 
-*.ipynb
+analysis/analysis.ipynb

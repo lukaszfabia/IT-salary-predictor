@@ -6,9 +6,9 @@ export function Layout({ children }: { children: ReactNode }) {
   return (
     <div className="bg-dark">
       <Navbar />
-      {/* <Blob1 /> */}
 
-      <main className="mx-auto max-w-2xl py-32 sm:py-48 lg:py-56 -z-50">
+      <main className="relative isolate px-6 pt-14 lg:px-8">
+        <Blob1 />
         {children}
       </main>
     </div>
