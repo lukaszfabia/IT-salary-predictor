@@ -86,7 +86,7 @@ to \texttt{Selenium}, ponieważ strona ma dynamicznie ładowany content.\\
     \item wzięcie średniej zarobków, a następnie usunięcie widełek w zarobkach (np. 10-15k $\implies$ 12.5k),
     \item rozbicie ofert pracy dla kontraktów oraz miast, np. mamy ofertę dla miasta A i B obie mają podane
           zarobki na b2b i uop, więc powstaną 4 nowe oferty, czyli A\_uop, A\_b2b, B\_uop, B\_b2b,
-    \item usunięcie ofert, w których określona została stawka godzinowa, ponieważ nie można jej określić w łatwy sposób,
+    \item usunięcie outlinerów,
     \item usunięcie tytułów ofert.
 \end{itemize}
 
@@ -137,7 +137,7 @@ to \texttt{Selenium}, ponieważ strona ma dynamicznie ładowany content.\\
 
 \section{Rozkłady i statystyki}
 
-\quad Aktualnie w zbiorze \textit{jobs.csv} znajduje się \textbf{5751} ofert pracy, które będą poddane
+\quad Aktualnie w zbiorze \textit{jobs.csv} znajduje się \textbf{5696} ofert pracy, które będą poddane
 analizie. Wszystkie dane są znormalizowane i gotowe do analizy. Analizę można zacząć od średniej zarobków
 dla kontraktu B2B oraz UOP.
 
@@ -148,10 +148,10 @@ dla kontraktu B2B oraz UOP.
     \centering
     \begin{tabular}{|c|c|c|c|}
         \hline
-        \textbf{PLN}             & \textbf{B2B} & \textbf{UOP} \\ \hline
-        \textbf{średnie widełki} & 9902.18      & 11057.05     \\ \hline
-        \textbf{min widełki}     & 5200.00      & 5500.00      \\ \hline
-        \textbf{max widełki}     & 16100.00     & 19000.00     \\ \hline
+        \textbf{PLN}     & \textbf{B2B} & \textbf{UOP} \\ \hline
+        \textbf{średnia} & 9902.18      & 11057.05     \\ \hline
+        \textbf{min}     & 5200.00      & 5500.00      \\ \hline
+        \textbf{max}     & 16100.00     & 19000.00     \\ \hline
     \end{tabular}
     \caption{Średnie zarobki w PLN dla \texttt{juniora} w Polsce}
 \end{table}
@@ -162,10 +162,10 @@ dla kontraktu B2B oraz UOP.
     \centering
     \begin{tabular}{|c|c|c|c|}
         \hline
-        \textbf{PLN}             & \textbf{B2B} & \textbf{UOP} \\ \hline
-        \textbf{średnie widełki} & 18025.50     & 15210.38     \\ \hline
-        \textbf{min widełki}     & 3132.50      & 6000.00      \\ \hline
-        \textbf{max widełki}     & 32500.00     & 27500.00     \\ \hline
+        \textbf{PLN}     & \textbf{B2B} & \textbf{UOP} \\ \hline
+        \textbf{średnia} & 18025.50     & 15210.38     \\ \hline
+        \textbf{min}     & 3132.50      & 6000.00      \\ \hline
+        \textbf{max}     & 32500.00     & 27500.00     \\ \hline
     \end{tabular}
     \caption{Średnie zarobki w PLN dla \texttt{mida} w Polsce}
 \end{table}
@@ -176,10 +176,10 @@ dla kontraktu B2B oraz UOP.
     \centering
     \begin{tabular}{|c|c|c|c|}
         \hline
-        \textbf{PLN}             & \textbf{B2B} & \textbf{UOP} \\ \hline
-        \textbf{średnie widełki} & 25700.81     & 22318.03     \\ \hline
-        \textbf{min widełki}     & 9791.00      & 10000.00     \\ \hline
-        \textbf{max widełki}     & 52500.00     & 60000.00     \\ \hline
+        \textbf{PLN}     & \textbf{B2B} & \textbf{UOP} \\ \hline
+        \textbf{średnia} & 25425.51     & 21734.47     \\ \hline
+        \textbf{min}     & 9791.00      & 10000.00     \\ \hline
+        \textbf{max}     & 40000.00     & 39040.50     \\ \hline
     \end{tabular}
     \caption{Średnie zarobki w PLN dla \texttt{seniora} w Polsce}
 \end{table}
@@ -236,6 +236,9 @@ Tutaj ilość ofert wyniósła zaledwie 159. W porównianiu do innych grup jest 
     \includegraphics[width=0.8\textwidth]{../analysis/plots/rozkłady/pensje_dla_seniora.png}
     \caption{Rozkłady zarobków dla poszczególnych umów dla seniorów}
 \end{figure}
+
+\quad Można zauważyć, że rozkłady przypominają rozkłady normalne, chociaż dla juniorów pensje na uop
+są bardziej wypłaszczone, co znaczy, że zarobki są bardziej zróżnicowane lub było zbyt mało ofert dla juniorów a oferty ze zbioru miały skrajne widełki na umowie o pracę. Dla seniorów zarobki na b2b są bardziej skupione wokół średniej.
 
 
 \subsection{Jakie technologie są najbardziej poszukiwane?}
@@ -320,7 +323,7 @@ warto zauważyć, że wykres nie różni się bardzo od poprzedniego. Jednak, to
     \caption{Powiązania między zarobkiem b2b a technologiami}
 \end{figure}
 
-\quad AWS, Git, Python, PHP mają wypłw na pensję na b2b.
+\quad AWS, Git, Python, PHP mają wypłw na pensję na b2b, ale nie jest on duży.
 
 \begin{figure}[H]
     \centering
@@ -328,7 +331,7 @@ warto zauważyć, że wykres nie różni się bardzo od poprzedniego. Jednak, to
     \caption{Powiązania między zarobkiem uop a technologiami}
 \end{figure}
 
-\quad PHP, Python, AWS, SQL, Go, Terraform mają wpływ na pensję na uop.
+\quad PHP, Python, AWS, SQL, Go, Terraform mają wpływ na pensję na uop, ale nie jest on duży.
 
 
 \section{Czy da się przewidzieć zarobki, w zależności od mojego tech-stacku?}
@@ -430,11 +433,11 @@ na podstawie RMSE. Następnie przewidzę zarobki dla kilku danych wejściowych, 
     \begin{tabular}{|c|c|c|c|}
         \hline
         \textbf{Model}        & \textbf{Mean Absolute Error} & \textbf{Root Mean Squared Error} & \textbf{R\textsuperscript{2} Score} \\ \hline
-        LinearRegression      & 3639.59                      & 4995.80                          & 0.50                                \\ \hline
-        DecisionTreeRegressor & 2691.79                      & 4140.79                          & 0.66                                \\ \hline
-        RandomForestRegressor & 1590.46                      & 3131.91                          & 0.80                                \\ \hline
-        Ridge                 & 3637.09                      & 4995.57                          & 0.50                                \\ \hline
-        Lasso                 & 3634.55                      & 4995.54                          & 0.50                                \\ \hline
+        LinearRegression      & 3485.34                      & 4371.01                          & 0.56                                \\ \hline
+        DecisionTreeRegressor & 2367.30                      & 3469.85                          & 0.72                                \\ \hline
+        RandomForestRegressor & 1529.31                      & 2757.87                          & 0.82                                \\ \hline
+        Ridge                 & 3485.97                      & 4374.60                          & 0.56                                \\ \hline
+        Lasso                 & 3484.26                      & 4371.90                          & 0.56                                \\ \hline
     \end{tabular}
 \end{table}
 
@@ -482,10 +485,10 @@ Pozostałe modele, czyli modele regresji liniowej mają pratykcznie te same wyni
 
 \subsubsection{Podsumowanie wyników dla 80:20}
 
-\quad Wyniki pokazały nam, że najlepszym modelem do przewidywania zarobków jest \texttt{RandomForestRegressor} z parametrami \texttt{n\_estimators=50},
+\quad Wyniki pokazały nam, że najlepszym modelem do przewidywania zarobków jest \texttt{RandomForestRegressor} z parametrami \texttt{n\_estimators=80},
 chociaż błędy były dość wysokie, ale może to wynikać z rozpiętości wiedełek pensji lub mogą być spowodowane małą ilością ofert pracy dla juniorów. Warto zauważyć, że
 dla najlepszego modelu dane były w miarę skupione w prostej wyznaczającej idealny wynik. Dopasowanie rozkładu było też całkiem dobre, ponieważ
-wykresy w większej części nachodziły na siebie.
+wykresy w większej części nachodziły na siebie. Histogramy były skupione wokół zera, co może oznaczać, że model dobrze przewiduje zarobki.
 
 
 \subsubsection{Wyniki dla podziału danych 60:40}
@@ -495,11 +498,11 @@ wykresy w większej części nachodziły na siebie.
     \begin{tabular}{|c|c|c|c|}
         \hline
         \textbf{Model}        & \textbf{Mean Absolute Error} & \textbf{Root Mean Squared Error} & \textbf{R\textsuperscript{2} Score} \\ \hline
-        LinearRegression      & 3685.29                      & 4954.55                          & 0.50                                \\ \hline
-        DecisionTreeRegressor & 2777.77                      & 4115.00                          & 0.66                                \\ \hline
-        RandomForestRegressor & 1807.25                      & 3240.76                          & 0.79                                \\ \hline
-        Ridge                 & 3683.98                      & 4955.21                          & 0.50                                \\ \hline
-        Lasso                 & 3684.60                      & 4957.81                          & 0.50                                \\ \hline
+        LinearRegression      & 3455.46                      & 4312.71                          & 0.55                                \\ \hline
+        DecisionTreeRegressor & 2477.46                      & 3586.54                          & 0.69                                \\ \hline
+        RandomForestRegressor & 1720.41                      & 2912.11                          & 0.80                                \\ \hline
+        Ridge                 & 3455.05                      & 4314.41                          & 0.55                                \\ \hline
+        Lasso                 & 3454.5                       & 4314.37                          & 0.55                                \\ \hline
     \end{tabular}
 \end{table}
 
@@ -543,11 +546,11 @@ wykresy w większej części nachodziły na siebie.
 
 
 \quad Wyniki są mniej precyzyjne niż dla poprzedniego testu, ale to wynika z faktu, że model uczył się na mniejszej
-ilości ofert. Warto zauważyć, że najlepszy model to \texttt{RandomForestRegressor} z parametrami \texttt{n\_estimators=50},
+ilości ofert. Warto zauważyć, że najlepszy model to \texttt{RandomForestRegressor} z parametrami \texttt{n\_estimators=80},
 potem był \texttt{DecisionTreeRegressor}, który miał gorsze wyniki niż w poprzednim teście. Warto zauważyć, że modele regresji liniowej osiągnęły lepsze wyniki jeśli chodzi o błędy, ale współczynnik determinacji był gorszy niż dla poprzedniego podziału.
 
 \section{Podsumowanie}
-\quad Najlepszym modelem będzie \texttt{RandomForestRegressor(n\_estimators=50)},
+\quad Najlepszym modelem będzie \texttt{RandomForestRegressor(n\_estimators=80)},
 ponieważ dawał najmniejsze błędy chociaż i tak w skali zarobków nie były one małe.
 Do uczenia modelu lepiej wybrać podziałkę 80:20. Wydaje mi się również, że aby uzyskać lepsze wyniki,
 należałoby zaktualizować zbiór danych o nowe oferty (głównie oferty dla juniorów). Warto dodać, że
@@ -563,14 +566,14 @@ Oczywiście, model może być jeszcze lepiej rozwinięty, jeśli dodane zostałb
 \end{figure}
 
 \quad Jak łatwo zauważyć, \textbf{doświadczenie} miało największy wpływ na przewidywaną wartość.
-Kolejnymi zmiennymi, które miały wpływ to \textbf{typ umowy}, \textbf{AWS}, \textbf{miasto}, \textbf{typ pracy}.
+Kolejnymi zmiennymi, które miały wpływ to \textbf{typ umowy}, \textbf{miasto}, \textbf{AWS} czy \textbf{Python}.
 
 \newpage
 
 \section{Testowanie wyuczonego modelu}
 
 \quad Tak jak już wcześniej wspomniałem model, który uznałem za odpowiedni, czyli popełniający najmniejszy błąd
-spośród wszystkich to \texttt{RandoForestRegressor(n\_estimators=50)}, dla podziałki 80:20.
+spośród wszystkich to \texttt{RandoForestRegressor(n\_estimators=80)}, dla podziałki 80:20.
 Przetestuję model, który przewidzi mi pensję na b2b i na umowie o pracę w zależności od technologii, które znam. Najważniejszą rzeczą jest tutaj to, żeby zarobki na b2b były większe niż na uopie,
 ponieważ pracodawcy nie muszą ponosić kosztów dodatkowych podatków, składek i świadczeń \cite{uop_vs_b2b}.
 
@@ -582,10 +585,10 @@ ponieważ pracodawcy nie muszą ponosić kosztów dodatkowych podatków, składe
           \begin{itemize}
               \item Docker/Kubernetes
               \item Python
-              \item Linux
               \item React
               \item TypeScript
               \item JavaScript
+              \item HTML/CSS
           \end{itemize}
 \end{itemize}
 
@@ -594,8 +597,8 @@ ponieważ pracodawcy nie muszą ponosić kosztów dodatkowych podatków, składe
 \quad Pensja w lokalizacji \textbf{Wrocław} dla \textbf{Junior} znającego \textit{Docker/Kubernetes, Python, Linux, React, TypeScript, JavaScript}:
 
 \begin{itemize}
-    \item 9045.17 PLN Brutto na umowie o pracę,
-    \item 9882.92 PLN Brutto na b2b
+    \item 8442.62 PLN Brutto na umowie o pracę,
+    \item 9118.08 PLN Brutto na b2b
 \end{itemize}
 
 \textbf{Wnioski po analizie zaprezentowanych wyników:}

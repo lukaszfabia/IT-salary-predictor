@@ -1,6 +1,6 @@
-Model,Mean Absolute Error,Root Mean Squared Error,R^2 Score
-LinearRegression,3485.34,4371.01,0.5586940274193819
-DecisionTreeRegressor,2469.94,3556.82,0.707786308714252
-RandomForestRegressor,1526.94,2733.95,0.827353767274479
-Ridge,3485.26,4372.3,0.5584328287162414
-Lasso,3484.26,4371.9,0.558513533159241
+Model                 ,Mean Absolute Error ,Root Mean Squared Error ,R^2 Score
+LinearRegression      ,            3485.34 ,                4371.01 ,0.5586940274193816
+DecisionTreeRegressor ,            2367.3  ,                3469.85 ,0.7219013596596584
+RandomForestRegressor ,            1529.31 ,                2757.87 ,0.8243185492013085
+Ridge                 ,            3485.97 ,                4374.6  ,0.5579683620117875
+Lasso                 ,            3484.26 ,                4371.9  ,0.5585135331592409
