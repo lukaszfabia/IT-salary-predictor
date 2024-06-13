@@ -71,7 +71,7 @@ export default function SalaryCalculator() {
 
   return (
     <Layout>
-      <div className="mx-auto sm:py-56 lg:py-20">
+      <div className="mx-auto sm:py-56 lg:py-32">
         <div>
           <h1 className="text-3xl font-bold text-center">Choose parameters</h1>
         </div>

@@ -1,5 +1,5 @@
 import Navbar from "../components/Navbar"
-import Blob1 from "../components/Blob1"
+import Blob1 from "../components/Blob"
 import { Layout } from "../components/Layout"
 
 
