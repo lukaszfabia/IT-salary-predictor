@@ -14,7 +14,7 @@
 
 5. [**Model do pobrania**](./models/model.pkl)
 
-6. [**Wizualizacje i rozwiązanie**](./analysis/analysis.ipynb)
+6. [**Wizualizacje i rozwiązanie**](./analysis/analysis.py)
 
 Wymagania:
 

@@ -30,7 +30,9 @@ def index():
 @api.post("/api/get-salary/")
 def get_salary(data: dict):
     compute_salary = ComputeSalary(data)
-    return {"salary": compute_salary.salary()}
+    data = data.copy()
+    data["salary"] = compute_salary.salary()
+    return data
 
 
 # power frontend

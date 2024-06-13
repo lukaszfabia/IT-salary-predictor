@@ -77,14 +77,14 @@ class ComputeSalary:
         return contracts
 
     def preprocess_input(self, raw_data: dict) -> pd.DataFrame:
-        location_code = self.location_encoder.transform([raw_data["location"]])[0]
-        exp_code = self.exp_encoder.transform([raw_data["exp"]])[0]
+        location_code = self.location_encoder.transform([raw_data["city"]])[0]
+        exp_code = self.exp_encoder.transform([raw_data["experience"]])[0]
         operating_mode_code = self.operating_mode_encoder.transform(
-            [raw_data["operating_mode"]]
+            [raw_data["operatingMode"]]
         )[0]
-        tech_stack = self.tech_stack_encoder.transform([raw_data["tech_stack"]])[0]
+        tech_stack = self.tech_stack_encoder.transform([raw_data["technologies"]])[0]
         contract_type_code = self.contract_type_encoder.transform(
-            [raw_data["contract_type"]]
+            [raw_data["contractType"]]
         )[0]
 
         res = np.concatenate(

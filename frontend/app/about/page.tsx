@@ -13,7 +13,7 @@ export default function About() {
                             alt="About"
                         />
                         <figcaption className="font-medium text-center mt-6">
-                            <div className="text-sky-500 dark:text-sky-400">Lukasz Fabia</div>
+                            <div className="text-sky-500 dark:text-sky-400"><a href="https://github.com/lukaszfabia/" target="_blank" >Lukasz Fabia</a></div>
                             <div className="text-slate-700 dark:text-slate-500">
                                 CS student at WUST
                             </div>

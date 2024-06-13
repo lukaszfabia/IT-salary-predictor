@@ -1,11 +1,13 @@
-export default interface InputData {
-    location: string;
-    exp: string;
-    operating_mode: string;
-    contract_type: string;
-    tech_stack: string[];
+interface BaseData {
+    city: string;
+    experience: string;
+    operatingMode: string;
+    contractType: string;
+    technologies: string[];
 }
 
-export default interface OutputData {
+export interface InputData extends BaseData { }
+
+export interface OutputData extends BaseData {
     salary: number;
 }
