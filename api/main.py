@@ -1,7 +1,11 @@
+from dotenv import load_dotenv
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-
+from fastapi.responses import JSONResponse
+from pymongo import MongoClient
+import os
 from get_salary import ComputeSalary
+from bson import json_util
 
 tmp = ComputeSalary()
 
@@ -21,10 +25,21 @@ api.add_middleware(
     allow_headers=["*"],
 )
 
+load_dotenv()
+client = MongoClient(os.getenv("MONGO_URI"))
+db = client["data_for_model"]
+
 
 @api.get("/")
 def index():
-    return {"message": "Hello, World"}
+    cursor = db["models_metrics_0.2"].find()
+
+    results = []
+    for doc in cursor:
+        doc.pop("_id", None)
+        results.append(doc)
+
+    return JSONResponse(content=results)
 
 
 @api.post("/api/get-salary/")

@@ -1,3 +1,4 @@
+from pathlib import Path
 import pandas as pd
 import numpy as np
 from typing import Dict, List
@@ -25,19 +26,24 @@ locations_synonyms: Dict[str, List[str]] = {
     "Gdynia": ["Gdynia"],
 }
 
+model_dir = Path("objects/")
+encoders_dir = Path("objects/encoders/")
+
 
 class ComputeSalary:
     def __init__(self, data: dict = {}) -> None:
         #### model
-        self.model = pd.read_pickle("../models/model.pkl")
+        self.model = pd.read_pickle(f"{model_dir}/best_model.pkl")
 
         #### encoders
-        self.location_encoder = pd.read_pickle("../encoders/location_encoder.pkl")
-        self.exp_encoder = pd.read_pickle("../encoders/exp_encoder.pkl")
-        self.tech_stack_encoder = pd.read_pickle("../encoders/tech_stack.pkl")
-        self.operating_mode_encoder = pd.read_pickle("../encoders/operating_mode.pkl")
+        self.location_encoder = pd.read_pickle(f"{encoders_dir}/location_en.pkl")
+        self.exp_encoder = pd.read_pickle(f"{encoders_dir}/exp_en.pkl")
+        self.tech_stack_encoder = pd.read_pickle(f"{encoders_dir}/tech_stack_en.pkl")
+        self.operating_mode_encoder = pd.read_pickle(
+            f"{encoders_dir}/operating_mode_en.pkl"
+        )
         self.contract_type_encoder = pd.read_pickle(
-            "../encoders/contract_type_encoder.pkl"
+            f"{encoders_dir}/contract_type_en.pkl"
         )
 
         self.data: pd.DataFrame = self.preprocess_input(data) if data != {} else None
