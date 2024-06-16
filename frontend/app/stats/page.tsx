@@ -1,52 +1,40 @@
 "use client";
 
 import { Layout } from "../../components/Layout";
-import { Line } from 'react-chartjs-2';
-import {
-    Chart as ChartJS,
-    CategoryScale,
-    LinearScale,
-    PointElement,
-    LineElement,
-    Title,
-    Tooltip,
-    Legend,
-} from 'chart.js';
-import { PieChart } from "@/components/Charts";
+import { SalaryDiagram } from "../../components/Charts";
+import { DescElements } from "@/lib/types";
 
-// Rejestrowanie komponentów
-ChartJS.register(
-    CategoryScale,
-    LinearScale,
-    PointElement,
-    LineElement,
-    Title,
-    Tooltip,
-    Legend
-);
-
-
-const data = {
-    labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-    datasets: [
-        {
-            label: 'My First dataset',
-            backgroundColor: 'rgba(75,192,192,0.2)',
-            borderColor: 'rgba(75,192,192,1)',
-            borderWidth: 1,
-            hoverBackgroundColor: 'rgba(75,192,192,0.4)',
-            hoverBorderColor: 'rgba(75,192,192,1)',
-            data: [65, 59, 80, 81, 56, 55, 40],
-        },
-    ],
-};
+function Description(elem: DescElements) {
+    return (
+        <div className="mb-10">
+            <h1 className="text-3xl" id={`${elem.anchor}`}>
+                {elem.title}<a href={`"#${elem.anchor}"`} className="text-transparent hover:text-violet-800 transition ease-in-out hover:underline">#</a>
+            </h1>
+            <p className="text-gray-400 text-lg m-4">
+                {elem.text}
+            </p>
+        </div>
+    )
+}
 
 export default function Stats() {
+
     return (
         <Layout>
-            <div className="mx-auto flex flex-wrap items-center justify-center py-56">
-                <PieChart data={data} />
+            <div className="mx-5 flex flex-wrap py-56">
+                <div className="mb-10">
+                    <h1 className="text-3xl" id="salary-stats">
+                        Salary statistics<a href="#stats_salary" className="text-transparent hover:text-violet-800 transition ease-in-out hover:underline">#</a>
+                    </h1>
+                    <p className="text-gray-400 text-lg m-4">
+                        Currently there are <b>[amount of jobs]</b>, vistualization is down below. At beginning we have some stats about salaries depend from contract.
+                        These salaries are at a good level because we have a higher salary for Mid and Senior
+                        on b2b than on uop, for a junior it is the other way around. The reason may be that they receive an employment contract
+                        very good programmers or there are few job offers for juniors in b2b.
+                    </p>
+                </div>
+                <SalaryDiagram />
             </div>
         </Layout>
-    )
+    );
 }

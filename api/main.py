@@ -50,6 +50,19 @@ def get_salary(data: dict):
     return data
 
 
+# stats
+@api.get("/api/salary-stats/")
+def get_salary_stats():
+    cursor = db["salary_stats"].find()
+
+    results = []
+    for doc in cursor:
+        doc.pop("_id", None)
+        results.append(doc)
+
+    return JSONResponse(content=results)
+
+
 # power frontend
 
 

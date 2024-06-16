@@ -17,6 +17,7 @@ from sklearn.model_selection import train_test_split
 import numpy as np
 from utils import save_obj
 from dotenv import load_dotenv
+import os
 
 load_dotenv()
 client = MongoClient(os.getenv("MONGO_URI"))
@@ -70,10 +71,10 @@ models_to_tune = {
 
 class LearnModel:
 
-    def __init__(self, data, models, __split_size=0.2):
+    def __init__(self, data, models, split_size=0.2):
         self.__data = data
         self.__models = models
-        self.__split_size = __split_size
+        self.__split_size = split_size
 
         self.__tmp_data = self.__data.copy()
 

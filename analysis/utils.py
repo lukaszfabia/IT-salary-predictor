@@ -62,3 +62,8 @@ def split_contracts(row):
 def save_obj(path: Path, encoder: Any) -> None:
     with open(path, "wb") as f:
         pickle.dump(encoder, f)
+
+
+def read_obj(path: Path) -> Any:
+    with open(path, "rb") as f:
+        return pickle.load(f)
