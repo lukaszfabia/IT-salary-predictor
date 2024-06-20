@@ -1,5 +1,5 @@
 from dotenv import load_dotenv
-from fastapi import FastAPI
+from fastapi import FastAPI, Response
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from pymongo import MongoClient
@@ -31,7 +31,7 @@ db = client["data_for_model"]
 
 
 @api.get("/")
-def index():
+async def index():
     cursor = db["models_metrics_0.2"].find()
 
     results = []
@@ -43,16 +43,27 @@ def index():
 
 
 @api.post("/api/get-salary/")
-def get_salary(data: dict):
+async def get_salary(data: dict):
     compute_salary = ComputeSalary(data)
     data = data.copy()
     data["salary"] = compute_salary.salary()
     return data
 
 
+@api.get("/api/{kategory}")
+async def get_data_about_kategory(kategory: str):
+    if kategory not in ("exp", "modes", "contracts", "locations", "technologies"):
+        return Response(status_code=204)
+    else:
+        collection = db[kategory]
+        res = list(collection.find({}, {"_id": 0}))
+        lowercased_documents = [{k.lower(): v for k, v in r.items()} for r in res]
+        return JSONResponse(content=lowercased_documents[0], status_code=200)
+
+
 # stats
 @api.get("/api/salary-stats/")
-def get_salary_stats():
+async def get_salary_stats():
     cursor = db["salary_stats"].find()
 
     results = []
@@ -63,29 +74,29 @@ def get_salary_stats():
     return JSONResponse(content=results)
 
 
-# power frontend
+# power frontend/calculator
 
 
 @api.get("/api/locations/")
-def get_locations():
+async def get_locations():
     return {"locations": tmp.all_locations()}
 
 
 @api.get("/api/experience/")
-def get_experience():
+async def get_experience():
     return {"experience": tmp.all_exp()}
 
 
 @api.get("/api/operating-modes/")
-def get_operating_modes():
+async def get_operating_modes():
     return {"operating_modes": tmp.all_operating_modes()}
 
 
 @api.get("/api/technologies/")
-def get_tech_stacks():
+async def get_tech_stacks():
     return {"tech_stacks": tmp.all_tech_stacks()}
 
 
 @api.get("/api/contract-types/")
-def get_contract_types():
+async def get_contract_types():
     return {"contract_types": tmp.all_contract_types()}

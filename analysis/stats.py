@@ -96,5 +96,8 @@ if __name__ == "__main__":
     analysis = Analysis(DataFrame(list(db.jobs.find())), db)
     # analysis.stats_for_salaries()
     analysis.most_popular(
-        "contracts", CodeNames.Contract.value, analysis.get_contract_type_en
+        collection_name="technologies",
+        first_col="AWS",
+        last_col="android",
+        encoder=analysis.get_location_en,
     )

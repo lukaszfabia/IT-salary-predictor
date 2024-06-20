@@ -26,8 +26,8 @@ locations_synonyms: Dict[str, List[str]] = {
     "Gdynia": ["Gdynia"],
 }
 
-model_dir = Path("objects/")
-encoders_dir = Path("objects/encoders/")
+model_dir = Path("../objects/")
+encoders_dir = Path("../objects/encoders/")
 
 
 class ComputeSalary:
