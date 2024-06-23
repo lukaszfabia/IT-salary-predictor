@@ -5,7 +5,6 @@ from fastapi.responses import JSONResponse
 from pymongo import MongoClient
 import os
 from get_salary import ComputeSalary
-from bson import json_util
 
 tmp = ComputeSalary()
 
@@ -72,6 +71,26 @@ async def get_salary_stats():
         results.append(doc)
 
     return JSONResponse(content=results)
+
+
+@api.get("/api/metrics/")
+async def get_metrics():
+    cursor = db["models_metrics_0.2"].find()
+
+    results = []
+    key_map = {
+        "Model": "model",
+        "Mean Absolute Error": "mae",
+        "Root Mean Squared Error": "rmse",
+        "R^2 Score": "r2",
+    }
+
+    for doc in cursor:
+        doc.pop("_id", None)
+        renamed_doc = {key_map.get(k, k): v for k, v in doc.items()}
+        results.append(renamed_doc)
+
+    return JSONResponse(content=results, status_code=200)
 
 
 # power frontend/calculator

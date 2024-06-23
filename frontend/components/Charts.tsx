@@ -11,7 +11,6 @@ import {
   Title,
   Tooltip,
   Legend,
-  PieController,
   ArcElement,
   ChartData,
   Point,
@@ -21,7 +20,7 @@ import {
 import LoadingSpinner from "@/components/LoadingSpinner";
 import { CreatePlotProps, SalaryStats } from "@/lib/types";
 import api from "@/lib/api";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import { getRandomColorsForPie } from "@/lib";
 
 ChartJS.register(
@@ -137,7 +136,7 @@ export const SalaryDiagram = () => {
   );
 };
 
-export const PieExp = ({
+export const PieChart = ({
   kategory,
   title,
 }: {
@@ -227,7 +226,7 @@ export const PopularityDiagram = ({
           labels: labels,
           datasets: [
             {
-              label: "Popularity",
+              label: "Amount",
               data: values,
               backgroundColor: "rgba(255, 255, 255, 0.2)",
               borderColor: "rgba(255, 255, 255, 1)",
@@ -242,11 +241,13 @@ export const PopularityDiagram = ({
   }, [kategory]);
 
   return (
-    <CreatePlot
-      chartData={chartData}
-      component={Bar}
-      title={title}
-      type="bar"
-    />
+    <Suspense fallback={<LoadingSpinner />}>
+      <CreatePlot
+        chartData={chartData}
+        component={Bar}
+        title={title}
+        type="bar"
+      />
+    </Suspense>
   );
 };

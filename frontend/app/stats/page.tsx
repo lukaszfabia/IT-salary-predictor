@@ -2,7 +2,7 @@
 
 import { Layout } from "../../components/Layout";
 import {
-  PieExp,
+  PieChart,
   PopularityDiagram,
   SalaryDiagram,
 } from "../../components/Charts";
@@ -51,13 +51,13 @@ export default function Stats() {
         />
         <div className="flex flex-wrap justify-center items-center">
           <div className="w-full sm:w-1/2 md:w-1/3 p-4">
-            <PieExp kategory="exp" title="Experience distribution" />
+            <PieChart kategory="exp" title="Experience distribution" />
           </div>
           <div className="w-full sm:w-1/2 md:w-1/3 p-4">
-            <PieExp kategory="modes" title="Operating mode distribution" />
+            <PieChart kategory="modes" title="Operating mode distribution" />
           </div>
           <div className="w-full sm:w-1/2 md:w-1/3 p-4">
-            <PieExp kategory="contracts" title="Contracts distribution" />
+            <PieChart kategory="contracts" title="Contracts distribution" />
           </div>
         </div>
       </div>

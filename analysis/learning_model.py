@@ -27,37 +27,37 @@ jobs = db.jobs
 models_tuning = db.models_tuning
 
 models_to_tune = {
-    "LinearRegression": {"model": LinearRegression(), "params": {}},
-    "DecisionTreeRegressor": {
-        "model": DecisionTreeRegressor(),
-        "params": {
-            "max_depth": [2, 4, 6, 8, 10],
-            "random_state": [0, 42],
-            "min_samples_split": [2, 5, 10, 20],
-        },
-    },
+    # "LinearRegression": {"model": LinearRegression(), "params": {}},
+    # "DecisionTreeRegressor": {
+    #     "model": DecisionTreeRegressor(),
+    #     "params": {
+    #         "max_depth": [2, 4, 6, 8, 10],
+    #         "random_state": [0, 42],
+    #         "min_samples_split": [2, 5, 10, 20],
+    #     },
+    # },
     "RandomForestRegressor": {
         "model": RandomForestRegressor(),
         "params": {"n_estimators": [10, 30, 20, 50, 80]},
     },
-    "Ridge": {"model": Ridge(), "params": {"alpha": [0.1, 0.5, 1, 2, 5, 10]}},
-    "Lasso": {"model": Lasso(), "params": {"alpha": [0.1, 0.5, 1, 2, 5, 10]}},
-    "ElasticNet": {
-        "model": ElasticNet(),
-        "params": {"alpha": [0.1, 0.5, 1, 2, 5, 10], "l1_ratio": [0.1, 0.5, 0.7, 0.9]},
-    },
-    "ElasticNetCV": {
-        "model": ElasticNetCV(),
-        "params": {"l1_ratio": [0.1, 0.5, 0.7, 0.9]},
-    },
-    "SVR": {
-        "model": SVR(),
-        "params": {
-            "C": [0.1, 1, 10, 100],
-            "gamma": [1, 0.1, 0.01, 0.001],
-            "kernel": ["rbf"],
-        },
-    },
+    # "Ridge": {"model": Ridge(), "params": {"alpha": [0.1, 0.5, 1, 2, 5, 10]}},
+    # "Lasso": {"model": Lasso(), "params": {"alpha": [0.1, 0.5, 1, 2, 5, 10]}},
+    # "ElasticNet": {
+    #     "model": ElasticNet(),
+    #     "params": {"alpha": [0.1, 0.5, 1, 2, 5, 10], "l1_ratio": [0.1, 0.5, 0.7, 0.9]},
+    # },
+    # "ElasticNetCV": {
+    #     "model": ElasticNetCV(),
+    #     "params": {"l1_ratio": [0.1, 0.5, 0.7, 0.9]},
+    # },
+    # "SVR": {
+    #     "model": SVR(),
+    #     "params": {
+    #         "C": [0.1, 1, 10, 100],
+    #         "gamma": [1, 0.1, 0.01, 0.001],
+    #         "kernel": ["rbf"],
+    #     },
+    # },
     "GradientBoostingRegressor": {
         "model": GradientBoostingRegressor(),
         "params": {
@@ -147,13 +147,31 @@ class LearnModel:
                 best_model = model
             metrics_list.append(metrics)
 
-        if db[f"models_metrics_{self.__split_size}"].count_documents({}) == 0:
+        if db.get_collection(f"models_metrics_{self.__split_size}") is None:
             db.create_collection(f"models_metrics_{self.__split_size}")
+        else:
+            db[f"models_metrics_{self.__split_size}"].delete_many({})
 
-        db[f"models_metrics_{self.__split_size}"].delete_many({})
-        db[f"models_metrics_{self.__split_size}"].insert_many(metrics_list)
+        db[f"models_metrics_{self.__split_size}"].insert_many(
+            sorted(metrics_list, key=lambda x: x["Root Mean Squared Error"])
+        )
 
         return best_model
+
+    def save_pred_and_test_values(self) -> None:
+        __y_pred = self.__best_model.predict(self.__x_test)
+        df = pd.DataFrame(
+            {
+                "y_test": self.__y_test,
+                "y_pred": __y_pred,
+            }
+        )
+        if db.get_collection("pred_and_test_data") is None:
+            db.create_collection("pred_and_test_data")
+        else:
+            db["pred_and_test_data"].delete_many({})
+
+        db["pred_and_test_data"].insert_many(df.to_dict(orient="records"))
 
     @property
     def get_best_model(self):
@@ -166,4 +184,5 @@ if __name__ == "__main__":
     model = LearnModel(df, models_to_tune)
 
     best_model = model.get_best_model
-    save_obj(Path("../objects/best_model.pkl"), best_model)
+    save_obj(Path(r"../objects/best_model.pkl"), best_model)
+    model.save_pred_and_test_values()

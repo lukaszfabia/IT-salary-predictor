@@ -39,3 +39,10 @@ export interface CreatePlotProps {
   component: React.ElementType<ChartProps<any, any, any>>;
   [key: string]: any;
 }
+
+export interface Metrics {
+  model: string;
+  r2: number;
+  mae: number;
+  rmse: number;
+}
