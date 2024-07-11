@@ -19,7 +19,6 @@ def create_connection() -> Optional[MongoClient]:
     PASSWORD = quote_plus(os.getenv("MONGO_PASSWORD"))
 
     uri = f"mongodb+srv://{USER}:{PASSWORD}@atlascluster.jwbtz27.mongodb.net/?retryWrites=true&w=majority&appName=AtlasCluster"
-
     # Create a new client and connect to the server
     client = MongoClient(uri, server_api=ServerApi("1"))
 
