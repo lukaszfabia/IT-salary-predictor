@@ -1,47 +1,47 @@
-import Navbar from "../components/Navbar";
-import Blob1 from "../components/Blob";
-import { Layout } from "../components/Layout";
 
-const texts = {
-  docs: "Announcing our next round of funding. ",
-  main: "Check how much you should earn as a programmer in Poland.",
-  about: "Calculate predicted salary based on your skills and other factors.",
-};
+import Link from "next/link";
+
+import { title, subtitle } from "@/components/primitives";
+import { Button } from "@nextui-org/button";
+import { faArrowRight, faMoneyBill } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
 
 export default function Home() {
   return (
-    <Layout>
-      <div className="mx-auto max-w-2xl py-32 sm:py-48 lg:py-56">
-        <div className="hidden sm:mb-8 sm:flex sm:justify-center">
-          <div className="relative rounded-full px-3 py-1 text-sm leading-6 text-gray-600 ring-1 ring-gray-900/10 hover:ring-gray-900/20">
-            {texts.docs}
-            <a href="/docs" className="font-semibold text-indigo-600">
-              <span className="absolute inset-0" aria-hidden="true" />
-              Read more <span aria-hidden="true">&rarr;</span>
-            </a>
-          </div>
-        </div>
-        <div className="text-center">
-          <h1 className="text-4xl font-bold tracking-tight text-gray-200 sm:text-6xl">
-            {texts.main}
-          </h1>
-          <p className="mt-6 text-lg leading-8 text-gray-300">{texts.about}</p>
-          <div className="mt-10 flex items-center justify-center gap-x-6">
-            <a
-              href="/calculate"
-              className="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-            >
-              Get started
-            </a>
-            <a
-              href="/about"
-              className="text-sm font-semibold leading-6 text-gray-400"
-            >
-              Learn more <span aria-hidden="true">&rarr;</span>
-            </a>
-          </div>
-        </div>
+    <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
+      <div className="inline-block max-w-lg text-center justify-center">
+        <h1 className={title()}>Discover your potential&nbsp;</h1>
+        <h1 className={title({ color: "violet" })}>earnings</h1>
+        <h1 className={title()}>&nbsp;in IT&nbsp;</h1>
+        <h1 className={title()}>- based on various&nbsp;</h1>
+        <h1 className={title({ color: "yellow" })}>factors</h1>
+        <h2 className={subtitle({ class: "mt-4" })}>
+          Predict salary based on your known <span className="font-semibold">languages</span>, <span className="font-semibold">frameworks</span>, and other factors.
+        </h2>
       </div>
-    </Layout>
+
+
+      <div className="flex gap-5">
+        <Link href="/calculator">
+          <Button size="lg" color="secondary" variant="ghost" radius="full">
+            <FontAwesomeIcon icon={faMoneyBill} className="w-5 h-5" />
+            &nbsp;Compute salary
+          </Button>
+        </Link>
+        <Link href="/about">
+          <Button
+            size="lg"
+            variant="shadow"
+            radius="full"
+            color="primary"
+          >
+            <FontAwesomeIcon icon={faArrowRight} className="w-5 h-5" />
+            &nbsp;Read more
+          </Button>
+        </Link>
+      </div>
+
+    </section>
   );
 }

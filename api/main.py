@@ -1,17 +1,30 @@
+from typing import Dict, List, Tuple
 from fastapi import FastAPI, Response
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from pymongo import MongoClient
-from connect_to_mongo import create_connection
+from schemas import (
+    Kategory,
+    ACCEPTED_KATEGORIES,
+    Kategories,
+    Model,
+    SalaryStatsModel,
+    SalaryModelOutput,
+    SalaryModelInput,
+    Statistic,
+    Collections,
+)
+from analysis.utils import create_connection, get_collection_or_db
 from get_salary import ComputeSalary
+from fastapi import status
 
-tmp = ComputeSalary()
+
+computer = ComputeSalary()
 
 
 api = FastAPI()
 
 origins = [
-    "http://localhost",
     "http://localhost:3000",
 ]
 
@@ -24,96 +37,110 @@ api.add_middleware(
 )
 
 client: MongoClient = create_connection()
-db = client["data_for_model"]
+db = get_collection_or_db(client)
 
 
 @api.get("/")
 async def index():
-    cursor = db["models_metrics_0.2"].find()
-
-    results = []
-    for doc in cursor:
-        doc.pop("_id", None)
-        results.append(doc)
-
-    return JSONResponse(content=results)
+    return {"Hello Ima Fast", "FastAPI"}
 
 
-@api.post("/api/get-salary/")
-async def get_salary(data: dict):
+@api.post(
+    "/api/get-salary/",
+    response_model=SalaryModelOutput | dict,
+    status_code=status.HTTP_200_OK,
+    description="Calculate salary",
+)
+async def get_salary(data: SalaryModelInput):
     compute_salary = ComputeSalary(data)
-    data = data.copy()
-    data["salary"] = compute_salary.salary()
-    return data
+    # we can assume that we dont need addional data cuz i dont want to route on the fake endpoint
+    # output can be next to input
+
+    return {"salary": compute_salary.salary()}
 
 
-@api.get("/api/{kategory}")
+@api.get(
+    "/api/{kategory}", status_code=status.HTTP_200_OK, response_model=List[Statistic]
+)
 async def get_data_about_kategory(kategory: str):
-    if kategory not in ("exp", "modes", "contracts", "locations", "technologies"):
-        return Response(status_code=204)
+    if kategory not in ACCEPTED_KATEGORIES:
+        return Response(status_code=status.HTTP_400_BAD_REQUEST)
     else:
-        collection = db[kategory]
-        res = list(collection.find({}, {"_id": 0}))
-        lowercased_documents = [{k.lower(): v for k, v in r.items()} for r in res]
-        return JSONResponse(content=lowercased_documents[0], status_code=200)
+        collection: List[Dict[Tuple]] = list(
+            get_collection_or_db(client, kategory).find({}, {"_id": 0})
+        )
+        data: Dict[Tuple] = dict(collection[0])  # there is always first elem
+        return [
+            Statistic(id=index, name=value[0], multiplicity=value[1])
+            for index, value in enumerate(data.items())
+        ]
 
 
 # stats
-@api.get("/api/salary-stats/")
+@api.get(
+    "/api/salary-stats/",
+    response_model=List[SalaryStatsModel],
+    status_code=status.HTTP_200_OK,
+    description="Get all stats about salary",
+)
 async def get_salary_stats():
-    cursor = db["salary_stats"].find()
+    cursor = get_collection_or_db(Collections.salary_stats.value).find()
 
-    results = []
-    for doc in cursor:
-        doc.pop("_id", None)
-        results.append(doc)
+    return [
+        SalaryStatsModel(
+            id=index,
+            exp=elem.get("exp", ""),
+            contract=elem.get("contract", ""),
+            count=elem.get("count", 0),
+            mean=elem.get("mean", 0.0),
+            min=elem.get("min", 0.0),
+            max=elem.get("max", 0.0),
+        )
+        for index, elem in enumerate(cursor)
+    ]
 
-    return JSONResponse(content=results)
 
-
-@api.get("/api/metrics/")
+@api.get(
+    "/api/metrics/",
+    response_model=List[Model],
+    status_code=status.HTTP_200_OK,
+    description="Get all computed metrics",
+)
 async def get_metrics():
-    cursor = db["models_metrics_0.2"].find()
+    cursor = get_collection_or_db(client, Collections.metrics.value).find()
 
-    results = []
-    key_map = {
-        "Model": "model",
-        "Mean Absolute Error": "mae",
-        "Root Mean Squared Error": "rmse",
-        "R^2 Score": "r2",
-    }
-
-    for doc in cursor:
-        doc.pop("_id", None)
-        renamed_doc = {key_map.get(k, k): v for k, v in doc.items()}
-        results.append(renamed_doc)
-
-    return JSONResponse(content=results, status_code=200)
+    return [
+        Model(
+            id=index,
+            name=elem.get("model", ""),
+            mae=elem.get("mae", 0.0),
+            rmse=elem.get("rmse", 0.0),
+            r2=elem.get("r2", 0.0),
+        )
+        for index, elem in enumerate(cursor)
+    ]
 
 
-# power frontend/calculator
+# static data from objects
 
 
-@api.get("/api/locations/")
-async def get_locations():
-    return {"locations": tmp.all_locations()}
-
-
-@api.get("/api/experience/")
-async def get_experience():
-    return {"experience": tmp.all_exp()}
-
-
-@api.get("/api/operating-modes/")
-async def get_operating_modes():
-    return {"operating_modes": tmp.all_operating_modes()}
-
-
-@api.get("/api/technologies/")
-async def get_tech_stacks():
-    return {"tech_stacks": tmp.all_tech_stacks()}
-
-
-@api.get("/api/contract-types/")
-async def get_contract_types():
-    return {"contract_types": tmp.all_contract_types()}
+@api.get(
+    "/api/{name}/",
+    response_model=List[Kategory],
+    status_code=status.HTTP_200_OK,
+    description="avaiable names: exp, modes, contracts, locations, technologies",
+)
+async def get_locations(name: str):
+    match name:
+        case Kategories.exp:
+            return computer.all_exp()
+        case Kategories.locations:
+            return computer.all_locations()
+        case Kategories.modes:
+            return computer.all_operating_modes()
+        case Kategories.technologies:
+            return computer.all_tech_stacks()
+        case Kategories.contracts:
+            return computer.all_contract_types()
+        case _:
+            return Response(status_code=status.HTTP_400_BAD_REQUEST)

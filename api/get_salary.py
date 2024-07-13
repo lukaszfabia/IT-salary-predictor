@@ -3,6 +3,8 @@ import pandas as pd
 import numpy as np
 from typing import Dict, List
 
+from schemas import Kategory, SalaryModelInput, SalaryModelOutput
+
 locations_synonyms: Dict[str, List[str]] = {
     "Warszawa": [
         "Warsaw",
@@ -31,7 +33,7 @@ encoders_dir = Path("../objects/encoders/")
 
 
 class ComputeSalary:
-    def __init__(self, data: dict = {}) -> None:
+    def __init__(self, data: SalaryModelInput = {}) -> None:
         #### model
         self.model = pd.read_pickle(f"{model_dir}/best_model.pkl")
 
@@ -46,52 +48,58 @@ class ComputeSalary:
             f"{encoders_dir}/contract_type_en.pkl"
         )
 
+        #### request from json with params for model
         self.data: pd.DataFrame = self.preprocess_input(data) if data != {} else None
 
-    def all_locations(self) -> str:
-        locations: List[str] = list()
+    def all_locations(self) -> List[Kategory]:
+        """special case to get all locations, normalizes locations
 
-        for location in self.location_encoder.classes_:
+        Returns:
+            List[Kategory]:  List of Kategories
+        """
+        _locations: List[Kategory] = list()
+
+        for index, location in enumerate(self.location_encoder.classes_):
             for key, value in locations_synonyms.items():
                 if location in value:
-                    locations.append(key)
+                    _locations.append(Kategory(id=index, name=key))
 
-        return locations
+        return _locations
 
-    def all_exp(self) -> List[str]:
-        exps: List[str] = list()
-        for exp in self.exp_encoder.classes_.T:
-            exps.append(exp)
-        return exps
+    def _all_kategories(self, encoder) -> List[Kategory]:
+        """getting kategories from decoded obejcts
+
+        Args:
+            encoder: object which was used to encode variables in machine learning process
+
+        Returns:
+            List[Kategory]: List of Kategories
+        """
+        return [
+            Kategory(id=index, name=exp) for index, exp in enumerate(encoder.classes_.T)
+        ]
+
+    # to check this shit or calling abstract func from class with getter to avaiable encoders
+    def all_exp(self) -> List[Kategory]:
+        return self._all_kategories(self.exp_encoder)
 
     def all_operating_modes(self) -> List[str]:
-        modes: List[str] = list()
-        for mode in self.operating_mode_encoder.classes_.T:
-            modes.append(mode)
-        return modes
+        return self._all_kategories(self.operating_mode_encoder)
 
     def all_tech_stacks(self) -> List[str]:
-        techs: List[str] = list()
-        for tech in self.tech_stack_encoder.classes_.T:
-            techs.append(tech)
-        return techs
+        return self._all_kategories(self.tech_stack_encoder)
 
     def all_contract_types(self) -> List[str]:
-        contracts: List[str] = list()
-        for contract in self.contract_type_encoder.classes_.T:
-            contracts.append(contract)
-        return contracts
+        return self._all_kategories(self.contract_type_encoder)
 
-    def preprocess_input(self, raw_data: dict) -> pd.DataFrame:
-        location_code = self.location_encoder.transform([raw_data["city"]])[0]
-        exp_code = self.exp_encoder.transform([raw_data["experience"]])[0]
-        operating_mode_code = self.operating_mode_encoder.transform(
-            [raw_data["operatingMode"]]
-        )[0]
-        tech_stack = self.tech_stack_encoder.transform([raw_data["technologies"]])[0]
-        contract_type_code = self.contract_type_encoder.transform(
-            [raw_data["contractType"]]
-        )[0]
+    def preprocess_input(self, raw_data: SalaryModelInput) -> pd.DataFrame:
+        location_code = self.location_encoder.transform([raw_data.city])[0]
+        exp_code = self.exp_encoder.transform([raw_data.exp])[0]
+        operating_mode_code = self.operating_mode_encoder.transform([raw_data.mode])[0]
+        tech_stack = self.tech_stack_encoder.transform([raw_data.technologies])[0]
+        contract_type_code = self.contract_type_encoder.transform([raw_data.contract])[
+            0
+        ]
 
         res = np.concatenate(
             [
@@ -101,8 +109,8 @@ class ComputeSalary:
         ).reshape(1, -1)
         return pd.DataFrame(res)
 
-    def salary(self) -> float:
+    def salary(self) -> SalaryModelOutput:
         self.data.columns = self.model.feature_names_in_
         salary_pred = self.model.predict(self.data)
 
-        return np.round(salary_pred[0], 2)
+        return SalaryModelOutput(id=0, salary=np.round(salary_pred[0], 2))
