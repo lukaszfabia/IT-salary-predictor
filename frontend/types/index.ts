@@ -5,11 +5,16 @@ export type IconSvgProps = SVGProps<SVGSVGElement> & {
 };
 
 export interface NavItem {
-  label: string,
-  href: string
+  label: string;
+  href: string;
 }
 
 export interface FooterItem extends NavItem {
-  brand: string,
-  title: string
+  brand: string;
+  title: string;
+}
+
+export type Kategory = {
+  id: number;
+  name: string;
 }
