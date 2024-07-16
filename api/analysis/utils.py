@@ -91,7 +91,7 @@ def create_connection() -> Optional[MongoClient]:
 
     uri = f"mongodb+srv://{USER}:{PASSWORD}@atlascluster.jwbtz27.mongodb.net/?retryWrites=true&w=majority&appName=AtlasCluster"
     # Create a new client and connect to the server
-    client = MongoClient(uri, server_api=ServerApi("1"))
+    client: MongoClient = MongoClient(uri, server_api=ServerApi("1"))
 
     # Send a ping to confirm a successful connection
     try:

@@ -1,7 +1,6 @@
 from typing import Dict, List, Tuple
 from fastapi import FastAPI, Response
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
 from pymongo import MongoClient
 from schemas import (
     Kategory,

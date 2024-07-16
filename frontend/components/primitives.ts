@@ -10,9 +10,11 @@ export const title = tv({
       cyan: "from-[#00b7fa] to-[#01cfea]",
       green: "from-[#6FEE8D] to-[#17c964]",
       pink: "from-[#FF72E1] to-[#F54C7A]",
-      foreground: "dark:from-[#FFFFFF] dark:to-[#4B4B4B]",
+      foreground:
+        "from-[#000000] to-[#BDBDBD] dark:from-[#FFFFFF] dark:to-[#4B4B4B]",
     },
     size: {
+      xs: "text-xl lg:text-2xl",
       sm: "text-3xl lg:text-4xl",
       md: "text-[2.3rem] lg:text-5xl leading-9",
       lg: "text-4xl lg:text-6xl",
@@ -49,5 +51,25 @@ export const subtitle = tv({
   },
   defaultVariants: {
     fullWidth: true,
+  },
+});
+
+export const checkbox = tv({
+  slots: {
+    base: "border-default hover:bg-default-200",
+    content: "text-default-500",
+  },
+  variants: {
+    isSelected: {
+      true: {
+        base: "border-secondary bg-secondary transition-all ease-in-out duration-200 hover:bg-secondary-500 hover:border-secondary-500",
+        content: "text-secondary-foreground pl-1",
+      },
+    },
+    isFocusVisible: {
+      true: {
+        base: "outline-none ring-2 ring-focus ring-offset-2 ring-offset-background",
+      },
+    },
   },
 });
