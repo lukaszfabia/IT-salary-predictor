@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 from typing import Dict, List
 
-from schemas import Kategory, SalaryModelInput, SalaryModelOutput
+from api.schemas import Kategory, SalaryModelInput, SalaryModelOutput
 
 locations_synonyms: Dict[str, List[str]] = {
     "Warszawa": [
@@ -28,8 +28,8 @@ locations_synonyms: Dict[str, List[str]] = {
     "Gdynia": ["Gdynia"],
 }
 
-model_dir = Path("objects/")
-encoders_dir = Path("objects/encoders/")
+model_dir = Path("api/objects/")
+encoders_dir = Path("api/objects/encoders/")
 
 
 class ComputeSalary:
