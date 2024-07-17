@@ -7,3 +7,4 @@ seaborn
 fastapi
 pymongo
 python-dotenv
+uvicorn

@@ -2,7 +2,7 @@ from typing import Dict, List, Tuple
 from fastapi import FastAPI, Response
 from fastapi.middleware.cors import CORSMiddleware
 from pymongo import MongoClient
-from schemas import (
+from api.schemas import (
     Kategory,
     ACCEPTED_KATEGORIES,
     Kategories,
@@ -13,8 +13,8 @@ from schemas import (
     Statistic,
     Collections,
 )
-from analysis.utils import create_connection, get_collection_or_db
-from get_salary import ComputeSalary
+from api.analysis.utils import create_connection, get_collection_or_db
+from api.get_salary import ComputeSalary
 from fastapi import status
 
 

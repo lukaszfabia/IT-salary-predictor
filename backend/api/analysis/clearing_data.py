@@ -13,7 +13,7 @@ import subprocess
 client = create_connection()
 db = get_collection_or_db(client=client)
 
-default_dir_encoders = Path("../../objects/encoders/")
+default_dir_encoders = Path("../objects/encoders/")
 subprocess.run(["mkdir", "-p", str(default_dir_encoders)])  # for unix <3
 
 
