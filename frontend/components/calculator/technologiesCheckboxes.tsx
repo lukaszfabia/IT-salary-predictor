@@ -1,25 +1,27 @@
 import { Kategory } from "@/types";
 import { CheckboxGroup } from "@nextui-org/checkbox";
 import { title } from "../primitives";
-import { FC, useState } from "react";
+import { ChangeEvent, FC } from "react";
 import { CustomCheckbox } from "../ui/customCheckbox";
 
-export const TechnologiesCheckboxes: FC<{ technologies: Kategory[] }> = ({
-  technologies,
+export const TechnologiesCheckboxes: FC<{ technologies: Kategory[], handleChange: (name: string, checked: boolean) => void }> = ({
+  technologies, handleChange
 }) => {
-  const [selected, setSelected] = useState<string[]>([]);
+
+  const handleCheckboxChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { value, checked } = e.target;
+    handleChange(value, checked);
+  };
 
   return (
     <div className="mt-2">
-      <h1 className={title({ size: "xs", color: "foreground" })}>Tech-stack</h1>
+      <h1 className={`${title({ size: "xs", color: "foreground" })} flex justify-center items-center py-1 lg:justify-start lg:items-start`}>Tech-stack</h1>
       <CheckboxGroup
         className="py-3 gap-1"
         orientation="horizontal"
-        onChange={setSelected}
-        value={selected}
       >
         {technologies.map((tech: Kategory) => (
-          <CustomCheckbox key={tech.id} value={tech.name}>
+          <CustomCheckbox key={tech.id} value={tech.name} onChange={handleCheckboxChange}>
             {tech.name}
           </CustomCheckbox>
         ))}

@@ -10,9 +10,9 @@ export const RadioFor: FC<{
 }> = ({ data, label, handleChange }) => {
   return (
     <>
-      <h1 className={title({ size: "xs", color: "foreground" })}>{label}</h1>
+      <h1 className={`${title({ size: "xs", color: "foreground" })} flex justify-center items-center py-1 lg:justify-start lg:items-start`}>{label}</h1>
       <RadioGroup
-        className="gap-1 py-2"
+        className="gap-2 py-2 flex justify-center items-center lg:justify-start lg:items-start"
         name={label}
         isRequired
         orientation="horizontal"

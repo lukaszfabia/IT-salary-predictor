@@ -23,16 +23,13 @@ computer = ComputeSalary()
 
 api = FastAPI()
 
-origins = [
-    "http://localhost:3000",
-]
 
 api.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=["*"],  # Allows all origins
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["*"],  # Allows all methods
+    allow_headers=["*"],  # Allows all headers
 )
 
 client: MongoClient = create_connection()
@@ -55,7 +52,7 @@ async def get_salary(data: SalaryModelInput):
     # we can assume that we dont need addional data cuz i dont want to route on the fake endpoint
     # output can be next to input
 
-    return {"salary": compute_salary.salary()}
+    return {"output": compute_salary.salary()}
 
 
 @api.get(

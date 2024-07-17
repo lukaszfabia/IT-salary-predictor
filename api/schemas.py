@@ -51,13 +51,12 @@ class SalaryStatsModel(BaseModel):
 
 
 class SalaryModelInput(BaseModel):
-    id: int
     city: str
     technologies: List[str]
-    exp: str
+    experience: str
     contract: str
     mode: str
 
 
-class SalaryModelOutput(SalaryModelInput):
+class SalaryModelOutput(BaseModel):
     salary: float
