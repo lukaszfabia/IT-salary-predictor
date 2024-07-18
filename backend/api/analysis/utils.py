@@ -88,11 +88,11 @@ def create_connection() -> Optional[MongoClient]:
     load_dotenv()
     # USER = quote_plus(os.getenv("MONGO_USER"))
     # PASSWORD = quote_plus(os.getenv("MONGO_PASSWORD"))
-    URI = os.getenv("MONGO_URI")
+    URI = quote_plus(os.getenv("MONGO_URI"))
 
     uri = URI
     # Create a new client and connect to the server
-    client: MongoClient = MongoClient(uri, server_api=ServerApi("1"))
+    client: MongoClient = MongoClient(uri)
 
     # Send a ping to confirm a successful connection
     try:
