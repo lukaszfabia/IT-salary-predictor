@@ -88,7 +88,7 @@ def create_connection() -> Optional[MongoClient]:
     load_dotenv()
     # USER = quote_plus(os.getenv("MONGO_USER"))
     # PASSWORD = quote_plus(os.getenv("MONGO_PASSWORD"))
-    URI = quote_plus(os.getenv("MONGO_URI"))
+    URI = os.getenv("MONGO_URI")
 
     uri = URI
     # Create a new client and connect to the server
