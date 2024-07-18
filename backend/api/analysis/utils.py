@@ -86,10 +86,11 @@ def create_connection() -> Optional[MongoClient]:
     """
 
     load_dotenv()
-    USER = quote_plus(os.getenv("MONGO_USER"))
-    PASSWORD = quote_plus(os.getenv("MONGO_PASSWORD"))
+    # USER = quote_plus(os.getenv("MONGO_USER"))
+    # PASSWORD = quote_plus(os.getenv("MONGO_PASSWORD"))
+    URI = os.getenv("MONGO_URI")
 
-    uri = f"mongodb+srv://{USER}:{PASSWORD}@atlascluster.jwbtz27.mongodb.net/?retryWrites=true&w=majority&appName=AtlasCluster"
+    uri = URI
     # Create a new client and connect to the server
     client: MongoClient = MongoClient(uri, server_api=ServerApi("1"))
 
