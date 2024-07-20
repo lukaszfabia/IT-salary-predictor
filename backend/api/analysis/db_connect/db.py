@@ -37,8 +37,7 @@ def create_connection() -> Optional[MongoClient]:
 def get_collection_or_db(
     client: MongoClient, collection: Optional[str] = None
 ) -> Collection | Database:
-    load_dotenv()
-    db_name: str = os.getenv("MONGO_DB")
+    db_name: str = "data_for_model"
 
     try:
         return client[db_name][collection] if collection else client[db_name]
