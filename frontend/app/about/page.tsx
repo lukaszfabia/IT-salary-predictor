@@ -26,7 +26,7 @@ export default function AboutPage() {
         {chapters.map((chapter: ReactNode, index: number) => (
           <React.Fragment key={index}>
             {chapter}
-            <Divider className="my-3" />
+            <Divider className="my-3" key={index} />
           </React.Fragment>
         ))}
       </article>

@@ -1,5 +1,6 @@
 "use client";
 
+import { FC } from "react";
 import {
   Navbar as Nav,
   NavbarContent,
@@ -15,13 +16,11 @@ import NextLink from "next/link";
 import clsx from "clsx";
 
 import { siteConfig } from "@/config/site";
-import { aboutChapers, navItems } from "@/config/links";
+import { navItems } from "@/config/links";
 import { ThemeSwitch } from "@/components/theme-switch";
 import { GithubIcon } from "@/components/icons";
-import { Chapter, NavItem } from "@/types";
-import { FC, ReactNode, useState } from "react";
+import { NavItem } from "@/types";
 import { usePathname } from "next/navigation";
-import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from "@nextui-org/react";
 
 const NavbarLinksAndToggler: FC<{ includeMenuToggle: boolean }> = ({ includeMenuToggle }) => {
   return (
@@ -35,43 +34,6 @@ const NavbarLinksAndToggler: FC<{ includeMenuToggle: boolean }> = ({ includeMenu
   );
 };
 
-const NavItemLink: FC<{ item: NavItem, checkPath: (link: string) => boolean }> = ({ item, checkPath }) => {
-  return (
-    <NavbarItem key={item.label} isActive={checkPath(item.label)}>
-      <NextLink
-        className={clsx(
-          linkStyles({ color: "foreground" }),
-          "data-[active=true]:text-primary data-[active=true]:font-medium",
-        )}
-        color="foreground"
-        href={item.href}
-      >
-        {item.label}
-      </NextLink>
-    </NavbarItem>
-  );
-};
-
-const DropdownChapters: FC<{ children: ReactNode }> = ({ children }) => {
-  const [isOpen, setIsOpen] = useState<boolean>(false);
-
-  return (
-    <Dropdown closeOnSelect isOpen={isOpen} onOpenChange={setIsOpen}>
-      <DropdownTrigger>
-        <div onMouseOver={() => setIsOpen(true)} onMouseLeave={() => setIsOpen(false)}>
-          {children}
-        </div>
-      </DropdownTrigger>
-      <DropdownMenu aria-label="about chapters">
-        {aboutChapers.map((elem: Chapter) => (
-          <DropdownItem key={elem.chapter}>
-            <NextLink href={`about/${elem.anchor}`}>{elem.chapter}</NextLink>
-          </DropdownItem>
-        ))}
-      </DropdownMenu>
-    </Dropdown>
-  );
-};
 
 export const Navbar: FC = () => {
   const path = usePathname();

@@ -1,5 +1,5 @@
-import { Link } from "@nextui-org/link"
 import { FC } from "react"
+import { Link } from "@nextui-org/link"
 
 export const Footer: FC = () => {
     return (

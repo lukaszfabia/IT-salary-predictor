@@ -1,16 +1,16 @@
 "use client";
 
-import { fetcher } from "../../lib/fetcher";
+import React, { FC, useEffect, useState } from "react";
 import { Kategory } from "@/types";
-import { FC, useEffect, useState } from "react";
 import { Spinner } from "@nextui-org/spinner";
-import React from "react";
-import { TechnologiesCheckboxes } from "./technologiesCheckboxes";
-import { LocationSelector } from "./locationSelector";
-import { RadioFor } from "./radioFor";
 import Error from "@/app/error";
 import { endpointKategories as endpoints } from "@/config/api";
 import { handleChange } from "@/lib/handlers"
+
+import { fetcher } from "../../lib/fetcher";
+import { TechnologiesCheckboxes } from "./technologiesCheckboxes";
+import { LocationSelector } from "./locationSelector";
+import { RadioFor } from "./radioFor";
 
 
 export const InputContent: FC<{

@@ -1,8 +1,8 @@
+import { FC } from "react"
 import { aboutChapers, encoders } from "@/config/links"
 import { steps } from "@/config/content"
 import Link from "next/link"
 import { title } from "../primitives"
-import { FC } from "react"
 
 export const CollectingData: FC = () => {
     return (

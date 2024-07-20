@@ -1,7 +1,7 @@
+import { FC } from "react"
 import { handlingFeatures } from "@/config/content"
 import { aboutChapers } from "@/config/links"
 import { title } from "../primitives"
-import { FC } from "react"
 import ExampleData from "./table"
 
 export const DataModel: FC = () => {

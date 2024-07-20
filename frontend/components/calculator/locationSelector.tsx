@@ -1,6 +1,6 @@
+import { ChangeEvent, FC } from "react";
 import { Kategory } from "@/types";
 import { Select, SelectItem } from "@nextui-org/select";
-import { ChangeEvent, FC } from "react";
 import { title } from "@/components/primitives"
 
 export const LocationSelector: FC<{ cities: Kategory[], handleChange: (e: ChangeEvent<HTMLSelectElement>) => void }> = ({ cities, handleChange }) => {

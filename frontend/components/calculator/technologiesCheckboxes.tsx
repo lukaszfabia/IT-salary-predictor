@@ -1,7 +1,7 @@
+import { ChangeEvent, FC } from "react";
 import { Kategory } from "@/types";
 import { CheckboxGroup } from "@nextui-org/checkbox";
 import { title } from "@/components/primitives"
-import { ChangeEvent, FC } from "react";
 import { CustomCheckbox } from "../ui/customCheckbox";
 
 export const TechnologiesCheckboxes: FC<{ technologies: Kategory[], handleChange: (name: string, checked: boolean) => void }> = ({

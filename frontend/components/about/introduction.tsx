@@ -1,4 +1,10 @@
+import { FC } from "react";
 import Image from "next/image";
+import { aboutChapers } from "@/config/links";
+import { Technology } from "@/types";
+import { Chip } from "@nextui-org/chip";
+import { title } from "../primitives";
+
 import mongo from "../../assets/techs/mongo.svg"
 import python from "../../assets/techs/python.svg"
 import jupyter from "../../assets/techs/jupyter.svg"
@@ -7,11 +13,7 @@ import pandas from "../../assets/techs/pandas.svg"
 import selenium from "../../assets/techs/selenium.svg"
 import sklearn from "../../assets/techs/sklearn.svg"
 import numpy from "../../assets/techs/numpy.svg"
-import { aboutChapers } from "@/config/links";
-import { Technology } from "@/types";
-import { Chip } from "@nextui-org/chip";
-import { title } from "../primitives";
-import { FC } from "react";
+
 
 const techs: Technology[] = [
     { name: "MongoDB", svg: <Image src={mongo} alt="mongo" width={20} height={20} /> },

@@ -1,3 +1,4 @@
+import { FC, ReactNode } from "react"
 import { solutionSteps } from "@/config/content"
 import { aboutChapers } from "@/config/links"
 import { Step } from "@/types"
@@ -6,8 +7,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { Button, Accordion, AccordionItem } from "@nextui-org/react"
 import Link from "next/link"
 import { title } from "../primitives"
-import { FC, ReactNode } from "react"
-import useSWR from "swr"
 import { api } from "@/config/api"
 import { fetcher } from "@/lib/fetcher"
 

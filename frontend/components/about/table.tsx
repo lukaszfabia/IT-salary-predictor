@@ -1,4 +1,5 @@
-'use client';
+"use client";
+
 import { api } from "@/config/api";
 import useSWR from "swr";
 import { fetcher } from "@/lib/fetcher";

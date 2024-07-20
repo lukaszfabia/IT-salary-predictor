@@ -1,7 +1,7 @@
+import { FC } from "react"
+import Link from "next/link"
 import { Chapter } from "@/types"
 import { Divider } from "@nextui-org/react"
-import Link from "next/link"
-import { FC } from "react"
 
 export const TableOfContents: FC<{ chapters: Chapter[] }> = ({ chapters }) => {
     return (

@@ -1,6 +1,6 @@
+import { FC } from "react"
 import { aboutChapers } from "@/config/links"
 import { title } from "../primitives"
-import { FC } from "react"
 import Image from "next/image";
 import worker from "../../assets/worker.svg"
 

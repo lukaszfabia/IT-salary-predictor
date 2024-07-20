@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import React, { FC, useEffect, useState } from "react";
 import { Button, Chip, Spinner } from "@nextui-org/react";
