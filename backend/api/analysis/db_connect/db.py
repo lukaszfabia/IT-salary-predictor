@@ -15,13 +15,13 @@ def create_connection() -> Optional[MongoClient]:
     """
 
     load_dotenv()
-    USER = quote_plus(os.getenv("MONGO_USER"))
-    PASSWORD = quote_plus(os.getenv("MONGO_PASSWORD"))
-    # URI = os.getenv("MONGO_URI")
+    # USER = quote_plus(os.getenv("MONGO_USER"))
+    # PASSWORD = quote_plus(os.getenv("MONGO_PASSWORD"))
+    URI = os.getenv("MONGO_URI")
 
-    # uri = URI
+    uri = URI
     # Create a new client and connect to the server
-    uri = f"mongodb+srv://{USER}:{PASSWORD}@atlascluster.jwbtz27.mongodb.net/?retryWrites=true&w=majority&appName=AtlasCluster"
+    # uri = f"mongodb+srv://{USER}:{PASSWORD}@atlascluster.jwbtz27.mongodb.net/?retryWrites=true&w=majority&appName=AtlasCluster"
     client: MongoClient = MongoClient(uri)
 
     # Send a ping to confirm a successful connection
