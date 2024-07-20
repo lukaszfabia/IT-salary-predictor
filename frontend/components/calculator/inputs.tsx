@@ -1,8 +1,8 @@
 "use client";
 
 import { fetcher } from "../../lib/fetcher";
-import { Input, Kategory } from "@/types";
-import { FC, SetStateAction, useEffect, useState } from "react";
+import { Kategory } from "@/types";
+import { FC, useEffect, useState } from "react";
 import { Spinner } from "@nextui-org/spinner";
 import React from "react";
 import { TechnologiesCheckboxes } from "./technologiesCheckboxes";
@@ -49,7 +49,7 @@ export const InputContent: FC<{
   if (loading)
     return (
       <div className="flex items-center justify-center py-40">
-        <Spinner />
+        <Spinner color="default" />
       </div>
     );
 

@@ -1,14 +1,6 @@
-import os
 import pickle
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List
 from pathlib import Path
-from urllib.parse import quote_plus
-
-from dotenv import load_dotenv
-from pymongo import MongoClient
-from pymongo.collection import Collection
-from pymongo.database import Database
-from pymongo.server_api import ServerApi
 
 
 locations_synonyms: Dict[str, List[str]] = {
@@ -76,37 +68,3 @@ def save_obj(path: Path, encoder: Any) -> None:
 def read_obj(path: Path) -> Any:
     with open(path, "rb") as f:
         return pickle.load(f)
-
-
-def create_connection() -> Optional[MongoClient]:
-    """creates connection to db api
-
-    Returns:
-        MongoClient: client
-    """
-
-    load_dotenv()
-    # USER = quote_plus(os.getenv("MONGO_USER"))
-    # PASSWORD = quote_plus(os.getenv("MONGO_PASSWORD"))
-    URI = os.getenv("MONGO_URI")
-
-    uri = URI
-    # Create a new client and connect to the server
-    client: MongoClient = MongoClient(uri)
-
-    # Send a ping to confirm a successful connection
-    try:
-        client.admin.command("ping")
-        print("Pinged your deployment. You successfully connected to MongoDB!")
-        return client
-    except Exception as e:
-        print(e)
-        return None
-
-
-def get_collection_or_db(
-    client: MongoClient, collection: Optional[str] = None
-) -> Collection | Database:
-    return (
-        client["data_for_model"][collection] if collection else client["data_for_model"]
-    )

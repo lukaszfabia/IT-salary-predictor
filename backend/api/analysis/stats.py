@@ -6,7 +6,6 @@ from pymongo import MongoClient
 import os
 from pandas import DataFrame
 from models.wrappers import SalaryStats
-from models.constants import CodeNames
 from pymongo.database import Database
 
 

@@ -1,10 +1,10 @@
 
 import Link from "next/link";
 
-import { title, subtitle } from "@/components/primitives";
 import { Button } from "@nextui-org/button";
 import { faArrowRight, faMoneyBill } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { title, subtitle } from "@/components/primitives";
 
 
 export default function Home() {
@@ -21,17 +21,21 @@ export default function Home() {
         </h2>
       </div>
 
-
       <div className="flex gap-5">
         <Link href="/calculator">
-          <Button size="lg" color="secondary" variant="ghost" radius="full">
+          <Button
+            size="md"
+            color="secondary"
+            variant="ghost"
+            radius="full"
+          >
             <FontAwesomeIcon icon={faMoneyBill} className="w-5 h-5" />
             &nbsp;Compute salary
           </Button>
         </Link>
         <Link href="/about">
           <Button
-            size="lg"
+            size="md"
             variant="shadow"
             radius="full"
             color="primary"
@@ -41,6 +45,7 @@ export default function Home() {
           </Button>
         </Link>
       </div>
+
 
     </section>
   );

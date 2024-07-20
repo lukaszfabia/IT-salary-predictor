@@ -1,4 +1,4 @@
-import { ChangeEvent, SetStateAction } from "react";
+import { ChangeEvent } from "react";
 import { Handler, Input } from "../types";
 import send from "./send";
 

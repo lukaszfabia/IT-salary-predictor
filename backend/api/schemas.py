@@ -23,6 +23,7 @@ ACCEPTED_KATEGORIES: Tuple[Kategories] = (
 class Collections(str, Enum):
     metrics = "models_metrics_0.2"
     salary_stats = "salary_stats"
+    raw_offers = "raw_offers"
 
 
 class Kategory(BaseModel):

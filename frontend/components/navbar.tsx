@@ -15,12 +15,13 @@ import NextLink from "next/link";
 import clsx from "clsx";
 
 import { siteConfig } from "@/config/site";
-import { navItems } from "@/config/links";
+import { aboutChapers, navItems } from "@/config/links";
 import { ThemeSwitch } from "@/components/theme-switch";
 import { GithubIcon } from "@/components/icons";
-import { NavItem } from "@/types";
-import { FC } from "react";
+import { Chapter, NavItem } from "@/types";
+import { FC, ReactNode, useState } from "react";
 import { usePathname } from "next/navigation";
+import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from "@nextui-org/react";
 
 const NavbarLinksAndToggler: FC<{ includeMenuToggle: boolean }> = ({ includeMenuToggle }) => {
   return (
@@ -31,42 +32,68 @@ const NavbarLinksAndToggler: FC<{ includeMenuToggle: boolean }> = ({ includeMenu
       <ThemeSwitch />
       {includeMenuToggle && <NavbarMenuToggle />}
     </>
-  )
-}
+  );
+};
+
+const NavItemLink: FC<{ item: NavItem, checkPath: (link: string) => boolean }> = ({ item, checkPath }) => {
+  return (
+    <NavbarItem key={item.label} isActive={checkPath(item.label)}>
+      <NextLink
+        className={clsx(
+          linkStyles({ color: "foreground" }),
+          "data-[active=true]:text-primary data-[active=true]:font-medium",
+        )}
+        color="foreground"
+        href={item.href}
+      >
+        {item.label}
+      </NextLink>
+    </NavbarItem>
+  );
+};
+
+const DropdownChapters: FC<{ children: ReactNode }> = ({ children }) => {
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+
+  return (
+    <Dropdown closeOnSelect isOpen={isOpen} onOpenChange={setIsOpen}>
+      <DropdownTrigger>
+        <div onMouseOver={() => setIsOpen(true)} onMouseLeave={() => setIsOpen(false)}>
+          {children}
+        </div>
+      </DropdownTrigger>
+      <DropdownMenu aria-label="about chapters">
+        {aboutChapers.map((elem: Chapter) => (
+          <DropdownItem key={elem.chapter}>
+            <NextLink href={`about/${elem.anchor}`}>{elem.chapter}</NextLink>
+          </DropdownItem>
+        ))}
+      </DropdownMenu>
+    </Dropdown>
+  );
+};
 
 export const Navbar: FC = () => {
   const path = usePathname();
   const checkPath = (name: string) => {
     return name.toLowerCase() === path.split('/')[1];
-  }
+  };
 
   return (
-    <Nav maxWidth="xl" shouldHideOnScroll classNames={{
-      item: [
-        "flex",
-        "relative",
-        "h-full",
-        "items-center",
-        "data-[active=true]:after:content-['']",
-        "data-[active=true]:after:absolute",
-        "data-[active=true]:after:bottom-0",
-        "data-[active=true]:after:left-0",
-        "data-[active=true]:after:right-0",
-        "data-[active=true]:after:h-[2px]",
-        "data-[active=true]:after:rounded-[2px]",
-        "data-[active=true]:after:bg-foreground",
-      ],
-    }}>
-
+    <Nav maxWidth="xl" shouldHideOnScroll className="px-5">
       {/* main nav links */}
       <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
         <NavbarBrand as="li" className="gap-3 max-w-fit">
           <NextLink className="flex justify-start items-center gap-1" href="/">
-            <p className={clsx(
-              linkStyles({ color: "foreground" }),
-              "data-[active=true]:text-primary font-bold",
-            )}
-              color="foreground">{siteConfig.name}</p>
+            <p
+              className={clsx(
+                linkStyles({ color: "foreground" }),
+                "data-[active=true]:text-primary font-bold",
+              )}
+              color="foreground"
+            >
+              {siteConfig.name}
+            </p>
           </NextLink>
         </NavbarBrand>
         <ul className="hidden lg:flex gap-4 justify-start ml-2">
@@ -87,23 +114,22 @@ export const Navbar: FC = () => {
         </ul>
       </NavbarContent>
 
-      <NavbarContent className="hidden sm:flex basis-1/5 sm:basis-full" justify="end">
+      <NavbarContent className="hidden lg:flex basis-1/5 sm:basis-full" justify="end">
         <NavbarItem className="hidden sm:flex gap-2">
           <NavbarLinksAndToggler includeMenuToggle={false} />
         </NavbarItem>
       </NavbarContent>
 
       {/* Mobile view */}
-      <NavbarContent className="sm:hidden basis-1 pl-4" justify="end">
+      <NavbarContent className="lg:hidden basis-1 pl-4" justify="end">
         <NavbarLinksAndToggler includeMenuToggle={true} />
       </NavbarContent>
 
-
       {/* menu for mobile */}
-      <NavbarMenu>
+      <NavbarMenu className="lg:hidden">
         <div className="mx-4 mt-2 flex flex-col gap-2">
-          {navItems.map((item: NavItem, index: number) => (
-            <NavbarMenuItem key={index} isActive={checkPath(item.label)}>
+          {navItems.map((item: NavItem) => (
+            <NavbarMenuItem key={item.href} isActive={checkPath(item.label)}>
               <NextLink
                 href={item.href}
                 className={clsx(

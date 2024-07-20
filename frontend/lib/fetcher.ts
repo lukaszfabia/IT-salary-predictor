@@ -1,2 +1,2 @@
-export const fetcher = async (url: string) =>
-  fetch(url).then((resp: Response) => resp.json());
+export const fetcher = async (url: string, isBlob: boolean = false) =>
+  fetch(url).then((resp: Response) => isBlob ? resp.blob() : resp.json());

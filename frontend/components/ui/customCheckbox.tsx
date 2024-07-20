@@ -1,7 +1,7 @@
-import React, { FC, useState } from "react";
+import React from "react";
 import { useCheckbox, Chip, VisuallyHidden, tv } from "@nextui-org/react";
 import { UseCheckboxProps } from "@nextui-org/checkbox/dist/use-checkbox.js";
-import { checkbox } from "../primitives";
+import { checkbox } from "@/components/primitives";
 import { CheckIcon } from "./checkIcon";
 
 export const CustomCheckbox = (props: UseCheckboxProps | undefined) => {

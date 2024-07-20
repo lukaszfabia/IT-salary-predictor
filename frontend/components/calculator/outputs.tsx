@@ -6,7 +6,7 @@ import { ArrowRight } from "../ui/arrowRight";
 import { Input } from "@/types";
 import { isArray, isString } from "@/lib/validators"
 import { handleSend } from "@/lib/handlers";
-import { title } from "../primitives";
+import { title } from "@/components/primitives"
 
 
 export const OutputContent: FC<{ data: Input }> = ({ data }) => {
@@ -48,7 +48,7 @@ export const OutputContent: FC<{ data: Input }> = ({ data }) => {
               handleSend(data, setLoading, setSalary);
             }}
           >
-            {loading ? <Spinner /> : <ArrowRight />}
+            {loading ? <Spinner color="default" /> : <ArrowRight />}
           </Button>
         </div>
       )}

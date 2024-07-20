@@ -1,6 +1,6 @@
 import { Kategory } from "@/types";
 import { CheckboxGroup } from "@nextui-org/checkbox";
-import { title } from "../primitives";
+import { title } from "@/components/primitives"
 import { ChangeEvent, FC } from "react";
 import { CustomCheckbox } from "../ui/customCheckbox";
 

@@ -1,6 +1,6 @@
 import { Kategory } from "@/types";
 import { RadioGroup, Radio } from "@nextui-org/react";
-import { title } from "../primitives";
+import { title } from "@/components/primitives"
 import { ChangeEvent, FC } from "react";
 
 export const RadioFor: FC<{
