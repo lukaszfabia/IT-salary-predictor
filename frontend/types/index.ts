@@ -19,7 +19,7 @@ export type IconSvgProps = SVGProps<SVGSVGElement> & {
 export type Technology = {
   name: string;
   svg: ReactNode;
-}
+};
 
 export interface NavItem {
   label: string;
@@ -34,12 +34,12 @@ export interface Chapter {
 export type Kategory = {
   id: number;
   name: string;
-}
+};
 
 export type Handler = {
   key: string;
   dataOnChange: (key: string, value: string) => void;
-}
+};
 
 export type Input = {
   city: string;
@@ -47,12 +47,12 @@ export type Input = {
   experience: string;
   contract: string;
   mode: string;
-}
+};
 
 export type Step = {
-  name: string,
-  desc: string,
-}
+  name: string;
+  desc: string;
+};
 
 export type Offer = {
   title: string;
@@ -64,4 +64,9 @@ export type Offer = {
   locations: string[];
   experience: string;
   operating_mode: string;
+};
+
+export interface ChapterComponent {
+  chapter: ReactNode;
+  key: string;
 }

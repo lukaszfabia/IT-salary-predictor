@@ -1,6 +1,6 @@
 import React from "react";
 export const CheckIcon = (
-  props: React.JSX.IntrinsicAttributes & React.SVGProps<SVGSVGElement>
+  props: React.JSX.IntrinsicAttributes & React.SVGProps<SVGSVGElement>,
 ) => (
   <svg
     aria-hidden="true"

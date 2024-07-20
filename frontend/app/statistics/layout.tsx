@@ -5,9 +5,7 @@ export default function StatsLayout({
 }) {
   return (
     <section>
-      <div>
-        {children}
-      </div>
+      <div>{children}</div>
     </section>
   );
 }

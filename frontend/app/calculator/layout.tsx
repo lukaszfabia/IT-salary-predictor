@@ -5,9 +5,7 @@ export default function CalculatorLayout({
 }) {
   return (
     <section>
-      <div>
-        {children}
-      </div>
+      <div>{children}</div>
     </section>
   );
 }

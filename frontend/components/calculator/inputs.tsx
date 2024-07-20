@@ -1,22 +1,23 @@
 "use client";
 
 import React, { FC, useEffect, useState } from "react";
-import { Kategory } from "@/types";
 import { Spinner } from "@nextui-org/spinner";
+
+import { Kategory } from "@/types";
 import Error from "@/app/error";
 import { endpointKategories as endpoints } from "@/config/api";
-import { handleChange } from "@/lib/handlers"
+import { handleChange } from "@/lib/handlers";
 
 import { fetcher } from "../../lib/fetcher";
+
 import { TechnologiesCheckboxes } from "./technologiesCheckboxes";
 import { LocationSelector } from "./locationSelector";
 import { RadioFor } from "./radioFor";
 
-
 export const InputContent: FC<{
-  dataOnChange: (key: string, value: string) => void, handleTechnologiesChange: (name: string, checked: boolean) => void
+  dataOnChange: (key: string, value: string) => void;
+  handleTechnologiesChange: (name: string, checked: boolean) => void;
 }> = ({ dataOnChange, handleTechnologiesChange }) => {
-
   const [locations, setLocations] = useState<Kategory[]>([]);
   const [technologies, setTechnologies] = useState<Kategory[]>([]);
   const [exps, setExps] = useState<Kategory[]>([]);
@@ -43,8 +44,7 @@ export const InputContent: FC<{
       });
   }, []);
 
-
-  if (error) return <Error error={error} reset={() => { }} />;
+  if (error) return <Error error={error} reset={() => {}} />;
 
   if (loading)
     return (
@@ -55,30 +55,40 @@ export const InputContent: FC<{
 
   return (
     <>
-      <LocationSelector cities={locations} handleChange={handleChange<HTMLSelectElement>(
-        { key: "city", dataOnChange: dataOnChange }
-      )} />
-      <TechnologiesCheckboxes technologies={technologies} handleChange={handleTechnologiesChange} />
+      <LocationSelector
+        cities={locations}
+        handleChange={handleChange<HTMLSelectElement>({
+          key: "city",
+          dataOnChange: dataOnChange,
+        })}
+      />
+      <TechnologiesCheckboxes
+        handleChange={handleTechnologiesChange}
+        technologies={technologies}
+      />
       <RadioFor
         data={exps}
+        handleChange={handleChange<HTMLInputElement>({
+          key: "experience",
+          dataOnChange: dataOnChange,
+        })}
         label="Experience"
-        handleChange={handleChange<HTMLInputElement>(
-          { key: "experience", dataOnChange: dataOnChange }
-        )}
       />
       <RadioFor
         data={modes}
+        handleChange={handleChange<HTMLInputElement>({
+          key: "mode",
+          dataOnChange: dataOnChange,
+        })}
         label="Work mode"
-        handleChange={handleChange<HTMLInputElement>(
-          { key: "mode", dataOnChange: dataOnChange }
-        )}
       />
       <RadioFor
         data={contracts}
+        handleChange={handleChange<HTMLInputElement>({
+          key: "contract",
+          dataOnChange: dataOnChange,
+        })}
         label="Contract type"
-        handleChange={handleChange<HTMLInputElement>(
-          { key: "contract", dataOnChange: dataOnChange }
-        )}
       />
     </>
   );

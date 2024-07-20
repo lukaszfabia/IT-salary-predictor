@@ -14,15 +14,17 @@ import { Link } from "@nextui-org/link";
 import { link as linkStyles } from "@nextui-org/theme";
 import NextLink from "next/link";
 import clsx from "clsx";
+import { usePathname } from "next/navigation";
 
 import { siteConfig } from "@/config/site";
 import { navItems } from "@/config/links";
 import { ThemeSwitch } from "@/components/theme-switch";
 import { GithubIcon } from "@/components/icons";
 import { NavItem } from "@/types";
-import { usePathname } from "next/navigation";
 
-const NavbarLinksAndToggler: FC<{ includeMenuToggle: boolean }> = ({ includeMenuToggle }) => {
+const NavbarLinksAndToggler: FC<{ includeMenuToggle: boolean }> = ({
+  includeMenuToggle,
+}) => {
   return (
     <>
       <Link isExternal aria-label="Github" href={siteConfig.links.github}>
@@ -34,15 +36,14 @@ const NavbarLinksAndToggler: FC<{ includeMenuToggle: boolean }> = ({ includeMenu
   );
 };
 
-
 export const Navbar: FC = () => {
   const path = usePathname();
   const checkPath = (name: string) => {
-    return name.toLowerCase() === path.split('/')[1];
+    return name.toLowerCase() === path.split("/")[1];
   };
 
   return (
-    <Nav maxWidth="xl" shouldHideOnScroll className="px-5">
+    <Nav shouldHideOnScroll className="px-5" maxWidth="xl">
       {/* main nav links */}
       <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
         <NavbarBrand as="li" className="gap-3 max-w-fit">
@@ -76,7 +77,10 @@ export const Navbar: FC = () => {
         </ul>
       </NavbarContent>
 
-      <NavbarContent className="hidden lg:flex basis-1/5 sm:basis-full" justify="end">
+      <NavbarContent
+        className="hidden lg:flex basis-1/5 sm:basis-full"
+        justify="end"
+      >
         <NavbarItem className="hidden sm:flex gap-2">
           <NavbarLinksAndToggler includeMenuToggle={false} />
         </NavbarItem>
@@ -93,11 +97,11 @@ export const Navbar: FC = () => {
           {navItems.map((item: NavItem) => (
             <NavbarMenuItem key={item.href} isActive={checkPath(item.label)}>
               <NextLink
-                href={item.href}
                 className={clsx(
                   linkStyles({ color: "foreground" }),
                   "data-[active=true]:text-primary data-[active=true]:font-medium",
                 )}
+                href={item.href}
               >
                 {item.label}
               </NextLink>

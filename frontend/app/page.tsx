@@ -1,11 +1,9 @@
-
 import Link from "next/link";
-
 import { Button } from "@nextui-org/button";
 import { faArrowRight, faMoneyBill } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { title, subtitle } from "@/components/primitives";
 
+import { title, subtitle } from "@/components/primitives";
 
 export default function Home() {
   return (
@@ -17,36 +15,26 @@ export default function Home() {
         <h1 className={title()}>- based on various&nbsp;</h1>
         <h1 className={title({ color: "yellow" })}>factors</h1>
         <h2 className={subtitle({ class: "mt-4" })}>
-          Predict salary based on your known <span className="font-semibold">languages</span>, <span className="font-semibold">frameworks</span>, and other factors.
+          Predict salary based on your known{" "}
+          <span className="font-semibold">languages</span>,{" "}
+          <span className="font-semibold">frameworks</span>, and other factors.
         </h2>
       </div>
 
       <div className="flex gap-5">
         <Link href="/calculator">
-          <Button
-            size="md"
-            color="secondary"
-            variant="ghost"
-            radius="full"
-          >
-            <FontAwesomeIcon icon={faMoneyBill} className="w-5 h-5" />
+          <Button color="secondary" radius="full" size="md" variant="ghost">
+            <FontAwesomeIcon className="w-5 h-5" icon={faMoneyBill} />
             &nbsp;Compute salary
           </Button>
         </Link>
         <Link href="/about">
-          <Button
-            size="md"
-            variant="shadow"
-            radius="full"
-            color="primary"
-          >
-            <FontAwesomeIcon icon={faArrowRight} className="w-5 h-5" />
+          <Button color="primary" radius="full" size="md" variant="shadow">
+            <FontAwesomeIcon className="w-5 h-5" icon={faArrowRight} />
             &nbsp;Read more
           </Button>
         </Link>
       </div>
-
-
     </section>
   );
 }
