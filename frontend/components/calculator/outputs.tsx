@@ -33,26 +33,26 @@ export const OutputContent: FC<{ data: Input }> = ({ data }) => {
       <div className="flex flex-wrap gap-2 p-10 justify-center items-center">
         {data
           ? Object.entries(data).map(([key, value]) =>
-              isString(value) ? (
+            isString(value) ? (
+              <Chip
+                key={key}
+                className="transition-all ease-in-out duration-300 hover:scale-105"
+                variant="dot"
+              >
+                {value}
+              </Chip>
+            ) : isArray(value) ? (
+              (Array.isArray(value) ? value : [value]).map((val: string) => (
                 <Chip
-                  key={key}
+                  key={val}
                   className="transition-all ease-in-out duration-300 hover:scale-105"
-                  variant="dot"
+                  variant="flat"
                 >
-                  {value}
+                  {val}
                 </Chip>
-              ) : isArray(value) ? (
-                (Array.isArray(value) ? value : [value]).map((val: string) => (
-                  <Chip
-                    key={val}
-                    className="transition-all ease-in-out duration-300 hover:scale-105"
-                    variant="flat"
-                  >
-                    {val}
-                  </Chip>
-                ))
-              ) : null,
-            )
+              ))
+            ) : null,
+          )
           : null}
       </div>
 
@@ -64,7 +64,7 @@ export const OutputContent: FC<{ data: Input }> = ({ data }) => {
               handleSend(data, setLoading, setSalary);
             }}
           >
-            {loading ? <Spinner color="default" /> : <ArrowRight />}
+            {loading ? <Spinner color="secondary" /> : <ArrowRight />}
           </Button>
         </div>
       )}

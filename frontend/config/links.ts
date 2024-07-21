@@ -48,20 +48,12 @@ export const statsChapers: Chapter[] = [
     anchor: "work-and-exp",
   },
   {
-    chapter: "Most popular technologies in Poland",
-    anchor: "popular-technologies",
+    chapter: "Most popular technologies and programmers friendly cities in Poland",
+    anchor: "popular-techs-and-cities",
   },
   {
-    chapter: "Programmers friendly cities",
-    anchor: "popular-cities",
-  },
-  {
-    chapter: "Results for my choosen models",
+    chapter: "Models results - accuracy",
     anchor: "models-results",
-  },
-  {
-    chapter: "Few conclusions",
-    anchor: "conclusions",
   },
 ];
 

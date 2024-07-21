@@ -3,11 +3,13 @@ from typing import Dict, List, Tuple
 from fastapi import FastAPI, Response
 from fastapi.middleware.cors import CORSMiddleware
 from pymongo import MongoClient
+import pymongo
 from api.schemas import (
     Kategory,
     ACCEPTED_KATEGORIES,
     Kategories,
     Model,
+    PredTestData,
     SalaryStatsModel,
     SalaryModelOutput,
     SalaryModelInput,
@@ -58,7 +60,10 @@ async def get_salary(data: SalaryModelInput):
 
 
 @api.get(
-    "/api/{kategory}", status_code=status.HTTP_200_OK, response_model=List[Statistic]
+    "/api/{kategory}",
+    status_code=status.HTTP_200_OK,
+    response_model=List[Statistic],
+    description="Get data about kategory",
 )
 async def get_data_about_kategory(kategory: str):
     if kategory not in ACCEPTED_KATEGORIES:
@@ -74,6 +79,39 @@ async def get_data_about_kategory(kategory: str):
         ]
 
 
+@api.get(
+    path="/api/tuning-data/",
+    status_code=status.HTTP_200_OK,
+    response_model=List[Statistic],
+    description="Get params for models",
+)
+async def tuning():
+    return {"not implemented": "sorry"}
+
+
+@api.get(
+    "/api/pred-test-data/",
+    status_code=status.HTTP_200_OK,
+    response_model=List[PredTestData],
+    description="Get predicted values for test data",
+)
+async def pred_test_data():
+    collection = get_collection_or_db(
+        client, Collections.pred_and_test_data.value
+    ).find({}, {"_id": 0})
+    if not collection:
+        return Response(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    else:
+        return [
+            PredTestData(
+                id=index,
+                x=elem.get("y_test", 0.0),
+                y=elem.get("y_pred", 0.0),
+            )
+            for index, elem in enumerate(collection)
+        ]
+
+
 # stats
 @api.get(
     "/api/salary-stats/",
@@ -86,7 +124,7 @@ async def get_salary_stats():
         cursor = (
             get_collection_or_db(client, Collections.salary_stats.value)
             .find()
-            .sort("mean", -1)
+            .sort("mean", pymongo.ASCENDING)
         )
 
         return [
@@ -121,7 +159,7 @@ async def get_metrics():
             name=elem.get("model", ""),
             mae=elem.get("mae", 0.0),
             rmse=elem.get("rmse", 0.0),
-            r2=elem.get("r2", 0.0),
+            r2=round(elem.get("r2", 0.0), 2),
         )
         for index, elem in enumerate(cursor)
     ]

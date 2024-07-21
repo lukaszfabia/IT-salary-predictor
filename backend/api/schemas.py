@@ -24,6 +24,7 @@ class Collections(str, Enum):
     metrics = "models_metrics_0.2"
     salary_stats = "salary_stats"
     raw_offers = "raw_offers"
+    pred_and_test_data = "pred_and_test_data"
 
 
 class Kategory(BaseModel):
@@ -61,3 +62,11 @@ class SalaryModelInput(BaseModel):
 
 class SalaryModelOutput(BaseModel):
     salary: float
+
+
+class PredTestData(BaseModel):
+    """Wraps y_test, y_pred"""
+
+    id: int
+    x: float
+    y: float

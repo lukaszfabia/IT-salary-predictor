@@ -1,5 +1,6 @@
 "use client";
 
+import React, { useState } from "react";
 import { FC } from "react";
 import {
   Navbar as Nav,
@@ -22,8 +23,10 @@ import { ThemeSwitch } from "@/components/theme-switch";
 import { GithubIcon } from "@/components/icons";
 import { NavItem } from "@/types";
 
-const NavbarLinksAndToggler: FC<{ includeMenuToggle: boolean }> = ({
+
+const NavbarLinksAndToggler: FC<{ includeMenuToggle: boolean, onMenuToggle: () => void }> = ({
   includeMenuToggle,
+  onMenuToggle,
 }) => {
   return (
     <>
@@ -31,19 +34,29 @@ const NavbarLinksAndToggler: FC<{ includeMenuToggle: boolean }> = ({
         <GithubIcon className="text-default-500" />
       </Link>
       <ThemeSwitch />
-      {includeMenuToggle && <NavbarMenuToggle />}
+      {includeMenuToggle && <NavbarMenuToggle onClick={onMenuToggle} />}
     </>
   );
 };
 
 export const Navbar: FC = () => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const path = usePathname();
+
   const checkPath = (name: string) => {
     return name.toLowerCase() === path.split("/")[1];
   };
 
+  const handleMenuToggle = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
+
+  const handleMenuItemClick = () => {
+    setIsMenuOpen(false);
+  };
+
   return (
-    <Nav shouldHideOnScroll className="px-5" maxWidth="xl">
+    <Nav shouldHideOnScroll className="px-5" maxWidth="xl" isMenuOpen={isMenuOpen}>
       {/* main nav links */}
       <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
         <NavbarBrand as="li" className="gap-3 max-w-fit">
@@ -82,13 +95,13 @@ export const Navbar: FC = () => {
         justify="end"
       >
         <NavbarItem className="hidden sm:flex gap-2">
-          <NavbarLinksAndToggler includeMenuToggle={false} />
+          <NavbarLinksAndToggler includeMenuToggle={false} onMenuToggle={handleMenuToggle} />
         </NavbarItem>
       </NavbarContent>
 
       {/* Mobile view */}
       <NavbarContent className="lg:hidden basis-1 pl-4" justify="end">
-        <NavbarLinksAndToggler includeMenuToggle={true} />
+        <NavbarLinksAndToggler includeMenuToggle={true} onMenuToggle={handleMenuToggle} />
       </NavbarContent>
 
       {/* menu for mobile */}
@@ -102,6 +115,7 @@ export const Navbar: FC = () => {
                   "data-[active=true]:text-primary data-[active=true]:font-medium",
                 )}
                 href={item.href}
+                onClick={handleMenuItemClick}
               >
                 {item.label}
               </NextLink>

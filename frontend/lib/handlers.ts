@@ -1,14 +1,13 @@
 import { ChangeEvent } from "react";
 
 import { Handler, Input } from "../types";
-
 import send from "./send";
 
 export const handleChange =
   <T extends HTMLSelectElement | HTMLInputElement>(handler: Handler) =>
-  (e: ChangeEvent<T>): void => {
-    handler.dataOnChange(handler.key, e.target.value);
-  };
+    (e: ChangeEvent<T>): void => {
+      handler.dataOnChange(handler.key, e.target.value);
+    };
 
 export const handleSend = (
   data: Input,

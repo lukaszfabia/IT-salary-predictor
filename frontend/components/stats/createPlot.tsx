@@ -1,17 +1,19 @@
 "use client";
 
+import React from "react";
 import { ChartProps } from "react-chartjs-2";
 import {
   Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
   BarElement,
   Title,
   Tooltip,
   Legend,
+  LineElement,
+  PointElement,
+  LinearScale,
+  CategoryScale,
   ArcElement,
 } from "chart.js";
-import React from "react";
 import { Spinner } from "@nextui-org/spinner";
 
 ChartJS.register(
@@ -19,6 +21,8 @@ ChartJS.register(
   LinearScale,
   Title,
   Tooltip,
+  PointElement,
+  LineElement,
   BarElement,
   ArcElement,
   Legend,
