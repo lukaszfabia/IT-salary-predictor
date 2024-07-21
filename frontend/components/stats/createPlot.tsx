@@ -10,6 +10,7 @@ import {
   Legend,
   LineElement,
   PointElement,
+  LineController,
   LinearScale,
   CategoryScale,
   ArcElement,
@@ -24,6 +25,7 @@ ChartJS.register(
   PointElement,
   LineElement,
   BarElement,
+  LineController,
   ArcElement,
   Legend,
 );
