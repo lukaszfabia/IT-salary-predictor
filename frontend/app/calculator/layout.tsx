@@ -1,3 +1,5 @@
+import { FadeIn } from "@/components/animations/animation";
+
 export default function CalculatorLayout({
   children,
 }: {
@@ -5,7 +7,7 @@ export default function CalculatorLayout({
 }) {
   return (
     <section>
-      <div>{children}</div>
+      <FadeIn>{children}</FadeIn>
     </section>
   );
 }

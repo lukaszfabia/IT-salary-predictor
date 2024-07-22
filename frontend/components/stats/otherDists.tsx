@@ -76,7 +76,7 @@ export const WorkInIt = () => {
             </h1>
             <div className="flex flex-col md:flex-row mt-10">
                 <div className="md:flex-1 p-2 py-10">
-                    <div className="flex flex-wrap items-center justify-center lg:py-0 py-4">
+                    <div className="flex flex-col md:flex-row items-center justify-center lg:py-0 py-4">
                         <ExperienceDist />
                         <OperatingModeDist />
                     </div>

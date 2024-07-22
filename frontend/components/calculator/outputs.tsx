@@ -1,7 +1,7 @@
 "use client";
 
 import React, { FC, useEffect, useState } from "react";
-import { Button, Chip, Spinner } from "@nextui-org/react";
+import { Button, Chip, Divider, Spinner } from "@nextui-org/react";
 
 import { Input } from "@/types";
 import { isArray, isString } from "@/lib/validators";
@@ -9,6 +9,7 @@ import { handleSend } from "@/lib/handlers";
 import { title } from "@/components/primitives";
 
 import { ArrowRight } from "../ui/arrowRight";
+import { TypingEffect } from "../animations/animation";
 
 export const OutputContent: FC<{ data: Input }> = ({ data }) => {
   const [minInput, setMinInput] = useState<boolean>(false);
@@ -69,11 +70,12 @@ export const OutputContent: FC<{ data: Input }> = ({ data }) => {
         </div>
       )}
       {salary > 0 && (
-        <div className="flex justify-center items-center p-10 pt-10">
-          <h1 className={title({ size: "lg", color: "violet" })}>
-            {salary} PLN
-          </h1>
-        </div>
+        <>
+          <div className="flex items-center justify-center"><Divider className="mt-10 w-3/4" /></div>
+          <div className="flex justify-center items-center p-10 pt-10">
+            <TypingEffect text={`${salary.toFixed(2)} PLN`} className="text-5xl font-semibold text-black dark:text-white" />
+          </div>
+        </>
       )}
     </>
   );

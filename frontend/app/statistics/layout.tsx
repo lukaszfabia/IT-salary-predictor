@@ -1,3 +1,5 @@
+import { FadeIn } from "@/components/animations/animation";
+
 export default function StatsLayout({
   children,
 }: {
@@ -5,7 +7,7 @@ export default function StatsLayout({
 }) {
   return (
     <section>
-      <div>{children}</div>
+      <FadeIn>{children}</FadeIn>
     </section>
   );
 }

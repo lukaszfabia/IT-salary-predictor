@@ -52,10 +52,8 @@ export const Popularity: FC = () => {
                 {statsChapers[2].chapter}
             </h1>
             <div className="flex flex-wrap md:flex-row mt-10">
-                <div className="md:flex-1 p-2 py-10">
-                    <div className="items-center justify-center lg:py-0 py-4  w-full">
-                        <PopularityDiagram props={cityPopularity} />
-                    </div>
+                <div className="md:flex-1 p-2 items-center justify-center lg:py-0 py-4 w-full">
+                    <PopularityDiagram props={cityPopularity} />
                 </div>
                 <div className="md:flex-1 p-2 py-10">
                     <h1 className="text-3xl font-semibold">Cities</h1>

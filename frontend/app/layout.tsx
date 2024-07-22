@@ -8,6 +8,7 @@ import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
 
 import { Providers } from "./providers";
+import { FadeIn } from "@/components/animations/animation";
 
 export const metadata: Metadata = {
   title: {
