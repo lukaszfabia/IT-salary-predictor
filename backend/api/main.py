@@ -32,7 +32,7 @@ api.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
     allow_credentials=True,
-    allow_methods=[""],
+    allow_methods=["*"],
     allow_headers=["*"],
 )
 
@@ -47,7 +47,7 @@ async def index():
 
 @api.post(
     "/api/get-salary/",
-    response_model=SalaryModelOutput | dict,
+    response_model=SalaryModelOutput,
     status_code=status.HTTP_200_OK,
     description="Calculate salary",
 )
@@ -55,8 +55,9 @@ async def get_salary(data: SalaryModelInput):
     compute_salary = ComputeSalary(data)
     # we can assume that we dont need addional data cuz i dont want to route on the fake endpoint
     # output can be next to input
+    salary: SalaryModelOutput = compute_salary.salary()
 
-    return {"output": compute_salary.salary()}
+    return salary
 
 
 @api.get(

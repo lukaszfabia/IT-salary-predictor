@@ -16,7 +16,7 @@ export const handleSend = (
 ): void => {
   setLoading(true);
   send(data)
-    .then((salary) => setOutput(salary))
+    .then((salary) => { setOutput(salary) })
     .catch((error) => console.error(error))
     .finally(() => setLoading(false));
 };

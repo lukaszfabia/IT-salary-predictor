@@ -49,6 +49,10 @@ export type Input = {
   mode: string;
 };
 
+export type Output = {
+  salary: number;
+}
+
 export type Step = {
   name: string;
   desc: string;

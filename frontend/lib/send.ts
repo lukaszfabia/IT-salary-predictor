@@ -1,5 +1,7 @@
-import { Input } from "@/types";
+import { Input, Output } from "@/types";
 import { api } from "@/config/api";
+
+
 
 export default function send(input: Input): Promise<number> {
   const requestOptions = {
@@ -9,9 +11,7 @@ export default function send(input: Input): Promise<number> {
   };
 
   return fetch(`${api}/get-salary/`, requestOptions)
-    .then((response) => response.json())
-    .then((data) => {
-      return data.output.salary;
-    })
-    .catch((error) => 0);
+    .then((response: Response) => response.json())
+    .then((data: Output) => data.salary)
+    .catch(() => 0);
 }
